@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Score Updater</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+        }
+        .score {
+            font-size: 32px;
+            color: blue;
+            margin: 10px 0;
+        }
+        .score.red {
+            color: red;
+        }
+        .circle {
+            width: 150px;
+            height: 150px;
+            background-color: gray;
+            border-radius: 50%;
+            margin: 20px 0 10px 0;
+            border: 2px solid black;
+        }
+        .label {
+            font-size: 30px;
+            color: green;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input {
+            padding: 10px;
+            font-size: 14px;
+            width: 80%;
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="teams">
+            <!-- Team 1 -->
+            <div class="team">
+                <h2>Team 1</h2>
+                <div class="score" id="team1-score">0</div>
+                <input type="number" id="team1-input" placeholder="Enter score" />
+                <button onclick="updateTeam1Score()">Update Team 1</button>
+                <div class="circle"></div>
+                <div class="label" id="team1-label">Enabled</div> <!-- Label -->
+            </div>
+
+            <!-- Team 2 -->
+            <div class="team">
+                <h2>Team 2</h2>
+                <div class="score red" id="team2-score">0</div>
+                <input type="number" id="team2-input" placeholder="Enter score" />
+                <button onclick="updateTeam2Score()">Update Team 2</button>
+                <div class="circle"></div>
+                <div class="label" id="team2-label">Enabled</div> <!-- Label -->
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="reset()">RESET</button>
+            <button onclick="bell()">BELL</button>
+        </div>
+    </div>
+
+    <script>
+
+        // const audio = new Audio('path/to/your/sound-file.mp3');
+
+        let team1Score = 0;
+        let team2Score = 0;
+
+        let bellRung = false;
+        let teamsEnabled = [true, true];
+        let buzzerPressed = false;
+
+        function updateTeam1Score() {
+            const input = document.getElementById("team1-input");
+            const value = parseInt(input.value);
+            if (isNaN(value)) {
+                alert("Please enter a valid integer for Team 1.");
+                return;
+            }
+            team1Score += value;
+            document.getElementById("team1-score").textContent = team1Score;
+            input.value = "";
+
+            // Update Team 1 Label dynamically
+            document.getElementById("team1-label").textContent = `Updated score: ${team1Score}`;
+        }
+
+        function updateTeam2Score() {
+            const input = document.getElementById("team2-input");
+            const value = parseInt(input.value);
+            if (isNaN(value)) {
+                alert("Please enter a valid integer for Team 2.");
+                return;
+            }
+            team2Score += value;
+            document.getElementById("team2-score").textContent = team2Score;
+            input.value = "";
+
+            // Update Team 2 Label dynamically
+            document.getElementById("team2-label").textContent = `Updated score: ${team2Score}`;
+        }
+
+        function reset() {
+            bellRung = false;
+            teamsEnabled = [true, true];
+            document.getElementById("team1-label").textContent = "Enabled";
+            document.getElementById("team2-label").textContent = "Enabled";
+            
+        }
+
+        window.addEventListener('keydown', function(event) {
+            // Team 1
+            if (event.key === 'a') {
+                if (teamsEnabled[0] && bellRung && !buzzerPressed) {
+                    document.getElementById("team1-label").textContent = "Winner!";
+                    buzzerPressed = true;
+                }
+                else {
+                    teamsEnabled[0] = false;
+                    document.getElementById("team1-label").textContent = "Disabled";
+                }
+            } 
+            // Team 2
+            else if (event.key === 'l') {
+                if (teamsEnabled[1] && bellRung && !buzzerPressed) {
+                    document.getElementById("team2-label").textContent = "Winner!";
+                    buzzerPressed = true;
+                }
+                else {
+                    teamsEnabled[1] = false;
+                    document.getElementById("team2-label").textContent = "Disabled";
+                }
+            }
+        });
+
+        function bell() {
+            bellRung = true;
+
+        }
+    </script>
+
+</body>
+</html>
