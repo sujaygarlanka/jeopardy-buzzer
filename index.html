@@ -54,11 +54,6 @@
             font-size: 30px;
             color: green;
         }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -68,18 +63,42 @@
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            width: 40%;
         }
         button:hover {
             background-color: #0056b3;
         }
-        input {
+        .special-button {
+            width: 80%;
+            margin: 20px;
+            padding: 20px 0;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+        .input-container button {
+            border-radius: 20px;
+        }
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+        .input-container input {
             padding: 10px;
             font-size: 14px;
             width: 80%;
             text-align: center;
-            margin: 10px 0;
+            margin: 15px;
         }
-
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
         table {
             width: 100%;
             margin-top: 20px;
@@ -105,26 +124,32 @@
             <div class="team">
                 <h2>Team 1</h2>
                 <div class="score" id="team1-score">0</div>
-                <input type="number" id="team1-input" placeholder="Enter score" />
-                <button onclick="updateTeam1Score()">Add to Team 1</button>
+                <!-- <input type="number" step=100 id="team1-input" placeholder="Enter score" /> -->
+                <div class="input-container">
+                    <button onclick="decrement(1)">-</button>
+                    <input type="number" step=100 id="team1-input" value="0" />
+                    <button onclick="increment(1)">+</button>
+                </div>
+                <button onclick="updateTeamScore(1)">Add to Team 1</button>
                 <div id="team1-circle" class="circle"></div>
                 <div class="label" id="team1-label">Enabled</div> <!-- Label -->
+                <button class="special-button" onclick="reset()">RESET</button>
             </div>
 
             <!-- Team 2 -->
             <div class="team">
                 <h2>Team 2</h2>
                 <div class="score red" id="team2-score">0</div>
-                <input type="number" id="team2-input" placeholder="Enter score" />
-                <button onclick="updateTeam2Score()">Add to Team 2</button>
+                <div class="input-container">
+                    <button onclick="decrement(2)">-</button>
+                    <input type="number" step=100 id="team2-input" value="0" />
+                    <button onclick="increment(2)">+</button>
+                </div>
+                <button onclick="updateTeamScore(2)">Add to Team 2</button>
                 <div id="team2-circle" class="circle"></div>
                 <div class="label" id="team2-label">Enabled</div> <!-- Label -->
+                <button class="special-button" onclick="bell()">BELL</button>
             </div>
-        </div>
-
-        <div class="buttons">
-            <button onclick="reset()">RESET</button>
-            <button onclick="bell()">BELL</button>
         </div>
 
         <table>
@@ -156,36 +181,43 @@
 
         const audio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
 
-        let team1Score = 0;
-        let team2Score = 0;
+        let teamScores = [0, 0];
 
         let bellRung = false;
         let teamsEnabled = [true, true];
         let buzzerPressed = false;
         reset();
 
-        function updateTeam1Score() {
-            const input = document.getElementById("team1-input");
+        function updateTeamScore(team) {
+            const input = document.getElementById(`team${team}-input`);
             const value = parseInt(input.value);
             if (isNaN(value)) {
-                alert("Please enter a valid integer for Team 1.");
+                alert("Please enter a valid integer for Team.");
                 return;
             }
-            team1Score += value;
-            document.getElementById("team1-score").textContent = team1Score;
-            input.value = "";
+            teamScores[team-1] += value;
+            document.getElementById(`team${team}-score`).textContent = teamScores[team-1];
+            input.value = "0";
         }
 
-        function updateTeam2Score() {
-            const input = document.getElementById("team2-input");
+        function decrement(team) {
+            const input = document.getElementById(`team${team}-input`);
             const value = parseInt(input.value);
             if (isNaN(value)) {
-                alert("Please enter a valid integer for Team 2.");
+                alert("Please enter a valid integer for Team.");
                 return;
             }
-            team2Score += value;
-            document.getElementById("team2-score").textContent = team2Score;
-            input.value = "";
+            input.value = value - 100;
+        }
+
+        function increment(team) {
+            const input = document.getElementById(`team${team}-input`);
+            const value = parseInt(input.value);
+            if (isNaN(value)) {
+                alert("Please enter a valid integer for Team.");
+                return;
+            }
+            input.value = value + 100;
         }
 
         function reset() {
