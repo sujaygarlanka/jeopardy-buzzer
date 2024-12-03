@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Score Updater</title>
+    <title>Jeopardy Buzzer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,6 +79,22 @@
             text-align: center;
             margin: 10px 0;
         }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
@@ -90,8 +106,8 @@
                 <h2>Team 1</h2>
                 <div class="score" id="team1-score">0</div>
                 <input type="number" id="team1-input" placeholder="Enter score" />
-                <button onclick="updateTeam1Score()">Update Team 1</button>
-                <div class="circle"></div>
+                <button onclick="updateTeam1Score()">Add to Team 1</button>
+                <div id="team1-circle" class="circle"></div>
                 <div class="label" id="team1-label">Enabled</div> <!-- Label -->
             </div>
 
@@ -100,8 +116,8 @@
                 <h2>Team 2</h2>
                 <div class="score red" id="team2-score">0</div>
                 <input type="number" id="team2-input" placeholder="Enter score" />
-                <button onclick="updateTeam2Score()">Update Team 2</button>
-                <div class="circle"></div>
+                <button onclick="updateTeam2Score()">Add to Team 2</button>
+                <div id="team2-circle" class="circle"></div>
                 <div class="label" id="team2-label">Enabled</div> <!-- Label -->
             </div>
         </div>
@@ -109,6 +125,30 @@
         <div class="buttons">
             <button onclick="reset()">RESET</button>
             <button onclick="bell()">BELL</button>
+        </div>
+
+        <table>
+            <tbody>
+                <thead>
+                    <th colspan="3">Timing Table</th>
+                </thead>
+                <tr>
+                    <td>Team 1</td>
+                    <td>Team 2</td>
+                    <td>Bell</td>
+                </tr>
+                <tr>
+                    <td id="1-time" >None</td>
+                    <td id="2-time">None</td>
+                    <td id="bell-time">None</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="align-self: flex-start;">
+            <h2>Instructions</h2>
+            <p>1. Press 'a' for Team 1 and 'l' for Team 2.</p>
+            <p>2. Press 'BELL' to ring the bell and open the gates!</p>
+            <p>3. Press 'RESET' to reset the buttons, but not score.</p>
         </div>
     </div>
 
@@ -122,6 +162,7 @@
         let bellRung = false;
         let teamsEnabled = [true, true];
         let buzzerPressed = false;
+        reset();
 
         function updateTeam1Score() {
             const input = document.getElementById("team1-input");
@@ -133,9 +174,6 @@
             team1Score += value;
             document.getElementById("team1-score").textContent = team1Score;
             input.value = "";
-
-            // Update Team 1 Label dynamically
-            document.getElementById("team1-label").textContent = `Updated score: ${team1Score}`;
         }
 
         function updateTeam2Score() {
@@ -148,48 +186,108 @@
             team2Score += value;
             document.getElementById("team2-score").textContent = team2Score;
             input.value = "";
-
-            // Update Team 2 Label dynamically
-            document.getElementById("team2-label").textContent = `Updated score: ${team2Score}`;
         }
 
         function reset() {
             bellRung = false;
             teamsEnabled = [true, true];
-            document.getElementById("team1-label").textContent = "Enabled";
-            document.getElementById("team2-label").textContent = "Enabled";
-            
+            buzzerPressed = false;
+            setLabel(1, "Enabled", "black");
+            setLabel(2, "Enabled", "black"); 
+            setTime(1, "None");
+            setTime(2, "None");
+            setTime('bell', "None");
+        }
+
+        function setLabel(team, label, color) {
+            document.getElementById(`team${team}-label`).textContent = label;
+            document.getElementById(`team${team}-label`).style.color = color;
+        }
+
+        function setCircleColor(team, color) {
+            document.getElementById(`team${team}-circle`).style.backgroundColor = color;
+        }
+
+        function setTime(team, text) {
+            document.getElementById(`${team}-time`).textContent = text;
+        }
+
+        function calculateTime() {
+            const now = new Date();
+
+            // Get the time in a locale-sensitive format
+            const timeWithoutMilliseconds = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false, // Use 24-hour time format; change to `true` for 12-hour format
+                timeZone: 'America/New_York', 
+            });
+
+            // Get milliseconds
+            const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
+
+            // Combine them
+            const timeWithMilliseconds = `${timeWithoutMilliseconds}.${milliseconds}`;
+            return timeWithMilliseconds;
+        }
+
+        function bell() {
+            bellRung = true;
+            setTime('bell', calculateTime());
         }
 
         window.addEventListener('keydown', function(event) {
             // Team 1
-            if (event.key === 'a') {
-                if (teamsEnabled[0] && bellRung && !buzzerPressed) {
-                    document.getElementById("team1-label").textContent = "Winner!";
+            if (event.key === 'a' && teamsEnabled[0]) {
+                if (bellRung && !buzzerPressed) {
+                    setLabel(1, "Winner!", "green");
                     buzzerPressed = true;
+                }
+                else if (bellRung && buzzerPressed) {
+                    setLabel(1, "Loser!", "red");
                 }
                 else {
-                    teamsEnabled[0] = false;
-                    document.getElementById("team1-label").textContent = "Disabled";
+                    setLabel(1, "Disabled", "red");
                 }
+                setTime(1, calculateTime());
+                teamsEnabled[0] = false;
             } 
             // Team 2
-            else if (event.key === 'l') {
-                if (teamsEnabled[1] && bellRung && !buzzerPressed) {
-                    document.getElementById("team2-label").textContent = "Winner!";
+            else if (event.key === 'l' && teamsEnabled[1]) {
+                if (bellRung && !buzzerPressed) {
+                    setLabel(2, "Winner!", "green");
                     buzzerPressed = true;
+                }
+                else if (bellRung && buzzerPressed) {
+                    setLabel(2, "Loser!", "red");
                 }
                 else {
                     teamsEnabled[1] = false;
-                    document.getElementById("team2-label").textContent = "Disabled";
+                    setLabel(2, "Disabled", "red");
                 }
+                setTime(2, calculateTime());
+                teamsEnabled[1] = false;
             }
         });
 
-        function bell() {
-            bellRung = true;
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'a') {
+                setCircleColor(1, "red");
+            }
+            else if (event.key === 'l') {
+                setCircleColor(2, "red");
+            }
+        });
 
-        }
+        window.addEventListener('keyup', function(event) {
+            if (event.key === 'a') {
+                setCircleColor(1, "gray");
+            }
+            else if (event.key === 'l') {
+                setCircleColor(2, "gray");
+            }
+        });
     </script>
 
 </body>
