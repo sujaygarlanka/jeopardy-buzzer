@@ -154,7 +154,7 @@
 
     <script>
 
-        // const audio = new Audio('path/to/your/sound-file.mp3');
+        const audio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
 
         let team1Score = 0;
         let team2Score = 0;
@@ -233,8 +233,13 @@
         }
 
         function bell() {
-            bellRung = true;
-            setTime('bell', calculateTime());
+            audio.play().then(() => {
+                bellRung = true;
+                setTime('bell', calculateTime());
+                console.log('Audio is playing');
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+            });
         }
 
         window.addEventListener('keydown', function(event) {
