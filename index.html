@@ -179,13 +179,16 @@
 
     <script>
 
-        const audio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
+        const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
+        const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/buzzer.mp3');
 
         let teamScores = [0, 0];
 
         let bellRung = false;
         let teamsEnabled = [true, true];
         let buzzerPressed = false;
+        let countDownInterval;
+
         reset();
 
         function updateTeamScore(team) {
@@ -224,6 +227,7 @@
             bellRung = false;
             teamsEnabled = [true, true];
             buzzerPressed = false;
+            clearInterval(countDownInterval);
             setLabel(1, "Enabled", "black");
             setLabel(2, "Enabled", "black"); 
             setTime(1, "None");
@@ -265,13 +269,22 @@
         }
 
         function bell() {
-            audio.play().then(() => {
+            bellAudio.play().then(() => {
                 bellRung = true;
                 setTime('bell', calculateTime());
-                console.log('Audio is playing');
-            }).catch(error => {
-                console.error('Error playing audio:', error);
             });
+        }
+
+        function startCountdown(team) {
+            let secondsLeft = 15;
+            countDownInterval = setInterval(() => {
+                secondsLeft -= 1;
+                setLabel(team, secondsLeft, 'red');
+                if (secondsLeft == 0) {
+                    clearInterval(countDownInterval);
+                    buzzerAudio.play();
+                }
+            }, 1000);
         }
 
         window.addEventListener('keydown', function(event) {
@@ -279,6 +292,7 @@
             if (event.key === 'a' && teamsEnabled[0]) {
                 if (bellRung && !buzzerPressed) {
                     setLabel(1, "Winner!", "green");
+                    startCountdown(1)
                     buzzerPressed = true;
                 }
                 else if (bellRung && buzzerPressed) {
@@ -294,6 +308,7 @@
             else if (event.key === 'l' && teamsEnabled[1]) {
                 if (bellRung && !buzzerPressed) {
                     setLabel(2, "Winner!", "green");
+                    startCountdown(2)
                     buzzerPressed = true;
                 }
                 else if (bellRung && buzzerPressed) {
