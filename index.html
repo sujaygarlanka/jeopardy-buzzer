@@ -211,9 +211,9 @@
         loadScores();
 
         function loadScores() {
-            const teamScoresCookie = getCookie("teamScores");
-            if (teamScoresCookie) {
-                teamScores = JSON.parse(teamScoresCookie);
+            const teamScoresStorage = localStorage.getItem("teamScores");
+            if (teamScoresStorage) {
+                teamScores = JSON.parse(teamScoresStorage);
                 teamScores.map((score, index) => {
                     document.getElementById(`team${index+1}-score`).textContent = score;
                 });
@@ -235,27 +235,6 @@
             })
         }
 
-        // Function to set a cookie
-        function setCookie(name, value, days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            const expires = "expires=" + date.toUTCString();
-            document.cookie = `${name}=${JSON.stringify(value)}; ${expires}; SameSite=None; Secure`;
-        }
-
-        // Function to get a cookie
-        function getCookie(name) {
-            const decodedCookie = decodeURIComponent(document.cookie);
-            const cookies = decodedCookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                let cookie = cookies[i].trim();
-                if (cookie.startsWith(name + "=")) {
-                    return cookie.substring(name.length + 1);
-                }
-            }
-            return null;
-        }
-
         function updateTeamScore(team) {
             const input = document.getElementById(`team${team}-input`);
             const value = parseInt(input.value);
@@ -265,7 +244,7 @@
             }
             teamScores[team-1] += value;
             document.getElementById(`team${team}-score`).textContent = teamScores[team-1];
-            setCookie('teamScores', teamScores, 1);
+            localStorage.setItem("teamScores", JSON.stringify(teamScores));
             input.value = "0";
         }
 
