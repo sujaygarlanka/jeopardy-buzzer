@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeopardy Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #fff;
+      text-align: center;
+    }
+
+    #jeopardy-board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      /* max-width: px; */
+      width: 80%;
+      margin: 20px auto;
+    }
+
+    .category, .question {
+      background-color: #0047AB;
+      border: 2px solid #002366;
+      padding: 15%;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .category {
+      background-color: #001F54;
+    }
+
+    .question:hover {
+      background-color: #FFD700;
+      color: #000;
+    }
+
+    #question-box {
+      visibility: hidden; /* Initially hidden */
+      width: 800px;
+      height: 400px;
+      margin: 20px auto;
+      background-color: #0047AB;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #002366;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      flex-direction: column; /* Align back button below the text */
+    }
+
+    #back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #FFD700;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    #back-button:hover {
+      background-color: #FFC107;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jeopardy</h1>
+  <div id="jeopardy-board">
+    <!-- Categories -->
+    <div class="category">Category 1</div>
+    <div class="category">Category 2</div>
+    <div class="category">Category 3</div>
+    <div class="category">Category 4</div>
+    <div class="category">Category 5</div>
+  </div>
+
+  <div id="question-box">
+    <div id="question-text"></div>
+    <button id="back-button">Back to Board</button>
+  </div>
+
+  <script>
+    const url = 'https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/data.json'; // Example JSON API
+    // const url = "http://127.0.0.1:8081/data.json"; // Example JSON API
+    let data;
+
+    // Fetch JSON data
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json(); // Parse the JSON from the response
+      })
+      .then((val) => {
+        data = val;
+        loadBoard();
+      });
+
+    // Function to handle the click event
+    function handleClick(index) {
+      // Hide the board
+      document.getElementById("jeopardy-board").style.display = "none";
+
+      // Show the question box
+      const questionBox = document.getElementById("question-box");
+      const questionText = document.getElementById("question-text");
+      questionText.textContent = data.questions[index].answer;
+      questionBox.style.visibility = "visible";
+    }
+
+    // Back button to return to the board
+    function showBoard() {
+      // Show the board
+      document.getElementById("jeopardy-board").style.display = "grid";
+      // Hide the question box
+      document.getElementById("question-box").style.visibility = "hidden";
+    }
+
+    function loadBoard() {
+      // Dynamically generate question divs with onclick handlers
+      const container = document.getElementById("jeopardy-board");
+      data.questions.forEach((question, index) => {
+        const questionDiv = document.createElement("div");
+        questionDiv.className = "question";
+        questionDiv.textContent = `$${question.value}`;
+        questionDiv.onclick = () => handleClick(index); // Attach onclick with index
+        container.appendChild(questionDiv);
+      });
+    }
+
+    // Attach event listener to the back button
+    document.getElementById("back-button").addEventListener("click", showBoard);
+  </script>
+</body>
+</html>
