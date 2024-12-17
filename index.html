@@ -268,16 +268,19 @@
             input.value = value + 100;
         }
 
-        function reset() {
+        function reset(cleartable=true) {
             bellRung = false;
             teamsEnabled = [true, true];
             buzzerPressed = false;
             clearInterval(countDownInterval);
             setLabel(1, "Enabled", "black");
-            setLabel(2, "Enabled", "black"); 
-            setTime(1, "None");
-            setTime(2, "None");
-            setTime('bell', "None");
+            setLabel(2, "Enabled", "black");
+
+            if(cleartable){
+                setTime(1, "None");
+                setTime(2, "None");
+                setTime('bell', "None");
+            }
         }
 
         function setLabel(team, label, color) {
@@ -328,8 +331,12 @@
                 if (secondsLeft == 0) {
                     clearInterval(countDownInterval);
                     buzzerAudio.play();
+                    //neels code
+                    reset(false) 
                 }
             }, 1000);
+            //neels code
+            
         }
 
         window.addEventListener('keydown', function(event) {
