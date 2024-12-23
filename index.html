@@ -49,11 +49,11 @@
       text-align: center;
     }
 
-
-
-    /***********************************************
-     * Top Bar, Team Scores, Buttons, etc.
-     ***********************************************/
+    /* 
+      ==========================================================
+      Top Bar, Team Scores, Buttons
+      ==========================================================
+    */
     #top-bar {
       display: flex;
       align-items: center;
@@ -139,9 +139,11 @@
       background-color: #2F4F4F;
     }
 
-    /***********************************************
-     * Jeopardy Board Grid 
-     ***********************************************/
+    /* 
+      ==========================================================
+      Jeopardy Board 
+      ==========================================================
+    */
     #jeopardy-board {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -177,9 +179,11 @@
       pointer-events: none;
     }
 
-    /***********************************************
-     * Question Box
-     ***********************************************/
+    /* 
+      ==========================================================
+      Question Box
+      ==========================================================
+    */
     #question-box {
       visibility: hidden; 
       width: 800px;
@@ -241,44 +245,41 @@
       opacity: 0.8;
     }
 
-    /* Container for Santa + banner */
+    /* 
+      ==========================================================
+      Santa with Banner (Right -> Left) - 
+      forcibly reset & measure approach
+      ==========================================================
+    */
     #santa {
       position: fixed;
-      bottom: -25px;     /* How high above the bottom the container sits */
-      left: 120%;       /* Start well off-screen to the right */
-      display: flex;    /* So Santa & banner sit side by side */
+      bottom: -25px;      
+      left: 120%;         
+      display: flex;
       align-items: center;
-      animation: santa-run 15s linear infinite;
-      z-index: 3;       /* Above backgrounds/particles, but below other UI if needed */
+      z-index: 3;         
+
+      /* We'll manipulate these transitions in JS to reset or animate */
+      transition-property: left;
+      transition-timing-function: linear;
+      transition-duration: 0s; 
     }
 
-    /* Santa image styling (optional) */
     #santa-img {
-      width: 150px;    /* Adjust the size to fit your GIF */
+      width: 150px;  
       height: auto;
       display: block;
     }
 
-    /* The trailing text banner */
     #banner {
-      margin-left: 20px;           /* Space between Santa and text */
-      background-color: gold;      /* Banner background color, pick your style */
-      color: var(--deep-christmas-red);                  /* Banner text color */
+      margin-left: 20px;      
+      background-color: gold; 
+      color: var(--deep-christmas-red); 
       font-weight: bold;
       padding: 10px 20px;
       border-radius: 8px;
-      font-size: 24px;             /* Adjust text size as desired */
-      white-space: nowrap;         /* Keep text on one line */
-    }
-
-    /* Keyframes: move from right (off-screen) to left (off-screen) */
-    @keyframes santa-run {
-      0% {
-        left: 120%;
-      }
-      100% {
-        left: -800px; /* Enough negative space so the entire container exits left */
-      }
+      font-size: 24px;     
+      white-space: nowrap; 
     }
   </style>
 </head>
@@ -286,14 +287,14 @@
   <!-- Snow Particles Container -->
   <div id="particles-js"></div>
 
-  <!-- Santa & Reindeer container with animation -->
+  <!-- Santa & Reindeer container with dynamic transition -->
   <div id="santa">
     <img
       id="santa-img"
       src="https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/santa.gif"
       alt="Santa with Reindeer"
     />
-    <div id="banner">Merry Christmas!</div>
+    <div id="banner">Banner Placeholder</div>
   </div>
 
   <div id="top-bar">
@@ -346,7 +347,7 @@
 
   <script>
     //////////////////////////////////////////////////////
-    // Board + Category Code
+    // 1) Jeopardy Board + Category Code
     //////////////////////////////////////////////////////
     const url = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; 
     let data;
@@ -354,11 +355,9 @@
     let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); 
     let showAnswerClicked = false; 
 
-    // Attach event listeners
     document.getElementById("back-button").addEventListener("click", showBoard);
     document.getElementById("show-answer-button").addEventListener("click", showAnswer);
 
-    // Fetch JSON data (categories, questions)
     fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -383,7 +382,7 @@
         board.appendChild(categoryDiv);
       });
 
-      // Insert questions
+      // Insert question squares
       data.questions.forEach((question, index) => {
         const questionDiv = document.createElement("div");
         questionDiv.className = "question";
@@ -408,17 +407,14 @@
       showAnswerClicked = false;
 
       document.getElementById("jeopardy-board").style.display = "none";
-
       const questionBox = document.getElementById("question-box");
       const questionText = document.getElementById("question-text");
       questionText.textContent = data.questions[index].question;
       questionBox.style.visibility = "visible";
-
       document.getElementById("show-answer-button").classList.remove("hidden");
     }
 
     function showBoard() {
-      // If user viewed the answer, mark question as clicked
       if (currentQuestionIndex !== null && showAnswerClicked) {
         const buttons = document.querySelectorAll(".question");
         buttons[currentQuestionIndex].classList.add("clicked");
@@ -457,8 +453,9 @@
       localStorage.setItem("teamScores", JSON.stringify(teamScores));
     }
 
+
     //////////////////////////////////////////////////////
-    // Buzzer Code
+    // 2) Buzzer + Team Code
     //////////////////////////////////////////////////////
     const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
     const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/buzzer.mp3');
@@ -585,6 +582,7 @@
       }
     });
 
+    // Only reset circle color if the team hasn't actually buzzed
     window.addEventListener('keydown', function(event) {
       if (event.key === 'a') {
         setCircleColor(1, "#FFD700");
@@ -599,6 +597,77 @@
       } else if (event.key === 'l' && teamBuzzed !== 2) {
         setCircleColor(2, "#2F4F4F");
       }
+    });
+
+    //////////////////////////////////////////////////////////
+    // 3) Quotes Logic for Santa Banner - Forcible Reset
+    //////////////////////////////////////////////////////////
+    let quotes = [];
+    let usedIndices = new Set();
+
+    const santa  = document.getElementById("santa");
+    const banner = document.getElementById("banner");
+
+    const quotesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/quotes.json";
+    fetch(quotesUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to fetch quotes.json! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((jsonData) => {
+        quotes = jsonData.quotes || [];
+        // Start after quotes load
+        startSantaRun();
+      })
+      .catch((err) => {
+        console.error("Error loading quotes:", err);
+        banner.textContent = "Merry Christmas!";
+        startSantaRun();
+      });
+
+    function getRandomQuote() {
+      if (!quotes.length) return "Merry Christmas!";
+      if (usedIndices.size === quotes.length) {
+        usedIndices.clear();
+      }
+      let idx = Math.floor(Math.random() * quotes.length);
+      while (usedIndices.has(idx)) {
+        idx = Math.floor(Math.random() * quotes.length);
+      }
+      usedIndices.add(idx);
+      return quotes[idx];
+    }
+
+    function startSantaRun() {
+      // === Step A: Reset transition so we can jump instantly
+      santa.style.transitionDuration = "0s";  
+      // Jump to the right edge
+      santa.style.left = "120%"; 
+      // Force reflow so the browser acknowledges this position
+      santa.getBoundingClientRect();
+
+      // === Step B: Set new quote
+      banner.textContent = getRandomQuote();
+
+      // === Step C: Measure new container width
+      const containerWidth = santa.offsetWidth;
+
+      // === Step D: Now set the transition for a consistent speed
+      const totalDistance = window.innerWidth + containerWidth + 60; 
+      // px per second
+      const speedPxPerSec = 200;
+      const durationSeconds = totalDistance / speedPxPerSec;
+      santa.style.transitionDuration = durationSeconds + "s";
+
+      // === Step E: Move Santa fully off the left side
+      santa.style.left = -containerWidth + "px";
+    }
+
+    santa.addEventListener("transitionend", () => {
+      // Once fully crossed, repeat
+      startSantaRun();
     });
   </script>
 
