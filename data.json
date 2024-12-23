@@ -137,5 +137,9 @@
             "question": "What is the solution to clue 1.5?",
             "dailyDouble": true
         }
-    ]    
+    ],
+    "final_jeopardy": {
+        "question": "What is Watsuragi Myagi known for?",
+        "answer": "Who is the great Chutney monger of 2010?"
+    }
 }
