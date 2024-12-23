@@ -318,7 +318,7 @@
 
       <!-- Middle Buttons -->
       <div id="middle-buttons">
-          <button class="square-button" onclick="reset()">Reset</button>
+          <button class="square-button" onclick="resetBuzzer()">Reset</button>
           <button id="bell" class="round-button"></button>
           <button class="square-button" onclick="bell()">Bell</button>
       </div>
@@ -446,6 +446,7 @@
     }
 
     function showBoard() {
+      resetBuzzer()
       if (currentQuestionIndex !== null && showAnswerClicked) {
         const buttons = document.querySelectorAll(".question");
         buttons[currentQuestionIndex].classList.add("clicked");
@@ -550,8 +551,9 @@
     let buzzerPressed = false;
     let countDownInterval;
     let teamBuzzed = null;
+    let teamsBuzzedSoFar = [];
 
-    reset();
+    resetBuzzer();
     loadScores();
 
     function loadScores() {
@@ -564,14 +566,17 @@
       }
     }
 
-    function reset() {
+    function resetBuzzer() {
       clearBell();
       teamsEnabled = [true, true];
       buzzerPressed = false;
       teamBuzzed = null;
+      teamsBuzzedSoFar = [];
       clearInterval(countDownInterval);
       setLabel(1, "Enabled", "white");
       setLabel(2, "Enabled", "white");
+      setCircleColor(1, "#2F4F4F");
+      setCircleColor(2, "#2F4F4F");
     }
 
     function handleIncorrect() {
@@ -579,7 +584,7 @@
       let value = data.questions[currentQuestionIndex].value;
       if (teamBuzzed) {
         updateScore(teamBuzzed, -value);
-        incorrectReset(teamBuzzed);
+        incorrectResetBuzzer(teamBuzzed);
       }
       incorrectAudio.play();
     }
@@ -590,14 +595,19 @@
       localStorage.setItem("teamScores", JSON.stringify(teamScores));
     }
 
-    function incorrectReset(team) {
+    function incorrectResetBuzzer(team) {
       clearInterval(countDownInterval);
-      teamsEnabled[team-1] = false;
+      teamsBuzzedSoFar.push(team);
+      
       teamsEnabled.forEach((enabled, index) => {
-        if (enabled) {
-          setLabel(index+1, "Enabled", "white");
-        } else {
+        if (teamsBuzzedSoFar.includes(index+1)) {
+          setCircleColor(team, "#2F4F4F");
           setLabel(index+1, "Disabled", "#FFD700");
+          teamsEnabled[index] = false;
+        } else {
+          setCircleColor(team, "#2F4F4F");
+          setLabel(index+1, "Enabled", "white");
+          teamsEnabled[index] = true;
         }
       });
       buzzerPressed = false;
@@ -629,7 +639,7 @@
     function bell() {
       bellAudio.play().then(() => {
         bellRung = true;
-        document.getElementById('bell').style.backgroundColor = "green";
+        document.getElementById('bell').style.backgroundColor = "#FFD700";
       });
     }
 
@@ -654,7 +664,7 @@
       // Team 1
       if (event.key === 'a' && teamsEnabled[0]) {
         if (bellRung && !buzzerPressed) {
-          setLabel(1, "Winner!", "green");
+          setLabel(1, "Winner!", "#FFD700");
           startCountdown(1);
           buzzerPressed = true;
           teamBuzzed = 1;
