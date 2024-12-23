@@ -16,7 +16,6 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 5px;
-      /* max-width: px; */
       width: 80%;
       margin: 20px auto;
     }
@@ -40,6 +39,13 @@
       color: #000;
     }
 
+    .question.clicked {
+      background-color: yellow;
+      color: #000;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     #question-box {
       visibility: hidden; /* Initially hidden */
       width: 800px;
@@ -54,11 +60,16 @@
       font-size: 24px;
       font-weight: bold;
       text-align: center;
-      flex-direction: column; /* Align back button below the text */
+      flex-direction: column; /* Align buttons below the text */
     }
 
-    #back-button {
+    #button-container {
       margin-top: 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    button {
       padding: 10px 20px;
       font-size: 16px;
       background-color: #FFD700;
@@ -69,8 +80,21 @@
       border-radius: 5px;
     }
 
-    #back-button:hover {
+    button:hover {
       background-color: #FFC107;
+    }
+
+    #show-answer-button.hidden {
+      display: none;
+    }
+
+    .red-button {
+      background-color: red;
+      color: white;
+    }
+
+    .red-button:hover {
+      background-color: darkred;
     }
   </style>
 </head>
@@ -87,13 +111,21 @@
 
   <div id="question-box">
     <div id="question-text"></div>
-    <button id="back-button">Back to Board</button>
+    <div id="button-container">
+      <button id="back-button">Back to Board</button>
+      <button id="show-answer-button">Show Answer</button>
+    </div>
+    <div id="action-buttons" style="margin-top: 20px; display: flex; gap: 10px;">
+      <button class="red-button" onclick="handleIncorrect()">Incorrect</button>
+    </div>
   </div>
 
   <script>
     const url = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; // Example JSON API
-    // const url = "http://127.0.0.1:8081/data.json"; // Example JSON API
     let data;
+    let currentQuestionIndex = null; // Store the current question index
+    let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); // Track clicked buttons
+    let showAnswerClicked = false; // Track if "Show Answer" was clicked
 
     // Fetch JSON data
     fetch(url)
@@ -110,23 +142,56 @@
 
     // Function to handle the click event
     function handleClick(index) {
+      currentQuestionIndex = index; // Save the current question index
+      showAnswerClicked = false; // Reset the "Show Answer" tracker
+
       // Hide the board
       document.getElementById("jeopardy-board").style.display = "none";
 
       // Show the question box
       const questionBox = document.getElementById("question-box");
       const questionText = document.getElementById("question-text");
-      questionText.textContent = data.questions[index].answer;
+      questionText.textContent = data.questions[index].question;
       questionBox.style.visibility = "visible";
+
+      // Ensure the "Show Answer" button is visible
+      document.getElementById("show-answer-button").classList.remove("hidden");
     }
 
     // Back button to return to the board
     function showBoard() {
+      // Highlight the clicked button if "Show Answer" was clicked
+      if (currentQuestionIndex !== null && showAnswerClicked) {
+        const buttons = document.querySelectorAll(".question");
+        buttons[currentQuestionIndex].classList.add("clicked");
+        clickedButtons.add(currentQuestionIndex);
+        localStorage.setItem('clickedButtons', JSON.stringify(Array.from(clickedButtons)));
+      }
+
       // Show the board
       document.getElementById("jeopardy-board").style.display = "grid";
       // Hide the question box
       document.getElementById("question-box").style.visibility = "hidden";
     }
+
+    // Show the answer
+    function showAnswer() {
+      if (currentQuestionIndex !== null) {
+        const questionText = document.getElementById("question-text");
+        questionText.textContent = `Answer: ${data.questions[currentQuestionIndex].answer}`;
+        showAnswerClicked = true; // Mark "Show Answer" as clicked
+
+        // Hide the "Show Answer" button
+        document.getElementById("show-answer-button").classList.add("hidden");
+      }
+    }
+
+    // Handle Incorrect button click
+    function handleIncorrect() {
+      console.log(`Incorrect clicked for question value: ${data.questions[currentQuestionIndex].value}`);
+    }
+
+    // Handle Correct button click
 
     function loadBoard() {
       // Dynamically generate question divs with onclick handlers
@@ -135,13 +200,31 @@
         const questionDiv = document.createElement("div");
         questionDiv.className = "question";
         questionDiv.textContent = `$${question.value}`;
-        questionDiv.onclick = () => handleClick(index); // Attach onclick with index
+        if (clickedButtons.has(index)) {
+          questionDiv.classList.add("clicked");
+        }
+        questionDiv.onclick = () => {
+          if (!clickedButtons.has(index)) {
+            handleClick(index);
+          }
+        }; // Attach onclick with index
         container.appendChild(questionDiv);
       });
     }
 
     // Attach event listener to the back button
     document.getElementById("back-button").addEventListener("click", showBoard);
+
+    // Attach event listener to the show answer button
+    document.getElementById("show-answer-button").addEventListener("click", showAnswer);
   </script>
 </body>
 </html>
+
+
+<script>
+//Help CLI
+//add
+//change_score
+//reset_index(ind)
+</script>
