@@ -1,17 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jeopardy Board</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Christmas Jeopardy Board</title>
+
+  <!-- Holiday-themed font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" 
+    rel="stylesheet"
+  />
+
   <style>
+    /* 
+      -----------------------------------------------
+      Define our Christmas Red as a CSS Variable
+      -----------------------------------------------
+    */
+    :root {
+      --deep-christmas-red: rgba(178, 34, 34, 0.9);
+    }
+
+    /* 
+      -----------------------------------------------
+      General Body and Font 
+      -----------------------------------------------
+    */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      font-family: 'Mountains of Christmas', cursive, sans-serif;
+      font-size: 20px; 
+      background: url('https://images.unsplash.com/photo-1558419362-4b36b6f10f58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')
+        no-repeat center center fixed;
+      background-size: cover;
       color: #fff;
       text-align: center;
     }
 
+    /* 
+      -----------------------------------------------
+      Top Bar and Team Scores
+      -----------------------------------------------
+    */
+    #top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 25px;
+      /* Use our variable for the top bar background */
+      background-color: var(--deep-christmas-red);
+      color: #fff;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .team-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #team-1, #team-2 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+    }
+
+    .score {
+      font-size: 30px;
+      margin: 5px 0;
+      color: #FFD700; /* Gold color for scores */
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .round-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #2F4F4F; /* Dark slate gray for default buzzer */
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .round-button:hover {
+      background-color: #3a5f5f;
+    }
+
+    .label {
+      font-size: 20px;
+      color: #fff;
+      margin-top: 5px;
+    }
+
+    #middle-buttons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .square-button {
+      padding: 12px 28px;  
+      border-radius: 5px;
+      background-color: #008000; /* Green button */
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .square-button:hover {
+      background-color: #228B22 /* Darker green on hover */
+    }
+
+    #bell {
+      background-color: #2F4F4F;
+    }
+
+    /*
+      -----------------------------------------------
+      Jeopardy Board Grid
+      -----------------------------------------------
+    */
     #jeopardy-board {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -21,46 +144,59 @@
     }
 
     .category, .question {
-      background-color: #0047AB;
-      border: 2px solid #002366;
-      padding: 15%;
-      font-size: 18px;
+      background-color: #228B22; /* Default green */
+      border: 2px solid #006400; 
+      padding: 12% 0;
+      font-size: 22px; 
       font-weight: bold;
       text-transform: uppercase;
       cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
 
+    /* Replace the category color with our variable for red */
     .category {
-      background-color: #001F54;
+      background-color: var(--deep-christmas-red);
     }
 
     .question:hover {
-      background-color: #FFD700;
+      background-color: #FFD700; /* Gold on hover */
       color: #000;
     }
 
     .question.clicked {
-      background-color: yellow;
+      background-color: #FFD700; 
       color: #000;
       cursor: not-allowed;
       pointer-events: none;
     }
 
+    /*
+      -----------------------------------------------
+      Question Box
+      -----------------------------------------------
+    */
     #question-box {
-      visibility: hidden; /* Initially hidden */
+      visibility: hidden; 
       width: 800px;
-      height: 400px;
+      height: 420px;
       margin: 20px auto;
-      background-color: #0047AB;
+      background-color: #228B22; /* Dark green overlay */
       color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 2px solid #002366;
-      font-size: 24px;
+      border: 2px solid #006400;
+      font-size: 26px;
       font-weight: bold;
       text-align: center;
-      flex-direction: column; /* Align buttons below the text */
+      flex-direction: column;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      border-radius: 10px;
+    }
+
+    #question-text {
+      padding: 20px;
     }
 
     #button-container {
@@ -69,11 +205,12 @@
       gap: 20px;
     }
 
+    /* Replace these button backgrounds with our variable for red */
     button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #FFD700;
-      color: #000;
+      padding: 12px 28px;
+      font-size: 20px;
+      background-color: var(--deep-christmas-red);
+      color: #fff;
       border: none;
       cursor: pointer;
       font-weight: bold;
@@ -81,91 +218,24 @@
     }
 
     button:hover {
-      background-color: #FFC107;
+      /* Optionally, you can create a second variable for hover if you want a different shade. */
+      background-color: var(--deep-christmas-red);
+      opacity: 0.8; /* Slight opacity for a hover effect */
     }
 
     #show-answer-button.hidden {
       display: none;
     }
 
+    /* For the "Incorrect" button */
     .red-button {
-      background-color: red;
+      background-color: var(--deep-christmas-red);
       color: white;
     }
-    .red-button:hover {
-      background-color: darkred;
-    }
-    #top-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 20px;
-        background-color: #f4f4f4;
-        color: black;
-        font-weight: bold;
-    }
-    .team-group {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    #team-1, #team-2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-size: 16px;
 
-    }
-    .score {
-        font-size: 24px;
-        margin: 5px 0;
-    }
-    .button-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .round-button {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: gray;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .round-button:hover {
-        background-color: gray;
-    }
-    .label {
-        font-size: 16px;
-        color: #555;
-        margin-top: 5px;
-    }
-    #middle-buttons {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    #bell {
-        background-color: gray;
-    }
-    .square-button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    .square-button:hover {
-        background-color: #0056b3;
+    .red-button:hover {
+      background-color: var(--deep-christmas-red);
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -202,6 +272,8 @@
           </div>
       </div>
   </div>
+
+  <!-- Jeopardy Board -->
   <div id="jeopardy-board">
     <!-- Categories -->
     <div class="category">Category 1</div>
@@ -211,6 +283,7 @@
     <div class="category">Category 5</div>
   </div>
 
+  <!-- Question Box -->
   <div id="question-box">
     <div id="question-text"></div>
     <div id="button-container">
@@ -226,101 +299,80 @@
     //////////////////////////////////////////////////////
     // Board Code
     //////////////////////////////////////////////////////
-    const url = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; // Example JSON API
+    const url = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; 
     let data;
-    let currentQuestionIndex = null; // Store the current question index
-    let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); // Track clicked buttons
-    let showAnswerClicked = false; // Track if "Show Answer" was clicked
+    let currentQuestionIndex = null; 
+    let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); 
+    let showAnswerClicked = false; 
 
-    // Attach event listener to the back button
     document.getElementById("back-button").addEventListener("click", showBoard);
-    // Attach event listener to the show answer button
     document.getElementById("show-answer-button").addEventListener("click", showAnswer);
 
-    // Fetch JSON data
     fetch(url)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json(); // Parse the JSON from the response
+        return response.json();
       })
       .then((val) => {
         data = val;
         loadBoard();
       });
 
-    // Function to handle the click event
     function handleClick(index) {
-      currentQuestionIndex = index; // Save the current question index
-      showAnswerClicked = false; // Reset the "Show Answer" tracker
+      currentQuestionIndex = index; 
+      showAnswerClicked = false;
 
-      // Hide the board
       document.getElementById("jeopardy-board").style.display = "none";
 
-      // Show the question box
       const questionBox = document.getElementById("question-box");
       const questionText = document.getElementById("question-text");
       questionText.textContent = data.questions[index].question;
       questionBox.style.visibility = "visible";
 
-      // Ensure the "Show Answer" button is visible
       document.getElementById("show-answer-button").classList.remove("hidden");
     }
 
-    // Back button to return to the board
     function showBoard() {
-      // Highlight the clicked button if "Show Answer" was clicked
       if (currentQuestionIndex !== null && showAnswerClicked) {
         const buttons = document.querySelectorAll(".question");
         buttons[currentQuestionIndex].classList.add("clicked");
         clickedButtons.add(currentQuestionIndex);
         localStorage.setItem('clickedButtons', JSON.stringify(Array.from(clickedButtons)));
       }
-
-      // Show the board
       document.getElementById("jeopardy-board").style.display = "grid";
-      // Hide the question box
       document.getElementById("question-box").style.visibility = "hidden";
     }
 
-    // Show the answer
     function showAnswer() {
       if (currentQuestionIndex !== null) {
         const questionText = document.getElementById("question-text");
         questionText.textContent = `Answer: ${data.questions[currentQuestionIndex].answer}`;
-        showAnswerClicked = true; // Mark "Show Answer" as clicked
+        showAnswerClicked = true; 
         if (teamBuzzed) {
-          // Update the score
           updateScore(teamBuzzed, data.questions[currentQuestionIndex].value);
         }
-
-        // Hide the "Show Answer" button
         document.getElementById("show-answer-button").classList.add("hidden");
       }
     }
 
-    // Handle Incorrect button click
     function handleIncorrect() {
-      let value = data.questions[currentQuestionIndex].value
+      let value = data.questions[currentQuestionIndex].value;
       if (teamBuzzed) {
-        // Update the score
         updateScore(teamBuzzed, -value);
-        // Reset the buzzer
         incorrectReset(teamBuzzed);
       }
-
+      incorrectAudio.play();
     }
 
     function updateScore(team, value) {
-        teamScores[team - 1] += value;
-        document.getElementById(`team${team}-score`).textContent = teamScores[team - 1];
-        localStorage.setItem("teamScores", JSON.stringify(teamScores));
+      teamScores[team - 1] += value;
+      document.getElementById(`team${team}-score`).textContent = teamScores[team - 1];
+      localStorage.setItem("teamScores", JSON.stringify(teamScores));
     }
 
-    // Handle Correct button click
     function loadBoard() {
-      // Dynamically generate question divs with onclick handlers
       const container = document.getElementById("jeopardy-board");
       data.questions.forEach((question, index) => {
         const questionDiv = document.createElement("div");
@@ -333,18 +385,19 @@
           if (!clickedButtons.has(index)) {
             handleClick(index);
           }
-        }; // Attach onclick with index
+        };
         container.appendChild(questionDiv);
       });
     }
+
     //////////////////////////////////////////////////////
     // Buzzer Code
     //////////////////////////////////////////////////////
     const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
     const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/buzzer.mp3');
+    const incorrectAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/wrong.m4a');    
 
     let teamScores = [0, 0];
-
     let bellRung = false;
     let teamsEnabled = [true, true];
     let buzzerPressed = false;
@@ -352,186 +405,143 @@
     let teamBuzzed = null;
 
     reset();
-    // loadJoke();
     loadScores();
 
     function loadScores() {
-        const teamScoresStorage = localStorage.getItem("teamScores");
-        if (teamScoresStorage) {
-            teamScores = JSON.parse(teamScoresStorage);
-            teamScores.map((score, index) => {
-                document.getElementById(`team${index+1}-score`).textContent = score;
-            });
-        }
-    }
-
-    function loadJoke() {
-        fetch("https://icanhazdadjoke.com/", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        })
-        .then(async response => {
-            if (response.ok) {
-                const joke = await response.json();
-                document.getElementById("quote-text").textContent = joke.joke;
-            }
-        })
+      const teamScoresStorage = localStorage.getItem("teamScores");
+      if (teamScoresStorage) {
+        teamScores = JSON.parse(teamScoresStorage);
+        teamScores.map((score, index) => {
+          document.getElementById(`team${index+1}-score`).textContent = score;
+        });
+      }
     }
 
     function reset() {
-        clearBell();
-        teamsEnabled = [true, true];
-        buzzerPressed = false;
-        teamBuzzed = null;
-        clearInterval(countDownInterval);
-        setLabel(1, "Enabled", "black");
-        setLabel(2, "Enabled", "black");
-        // setTime(1, "None");
-        // setTime(2, "None");
-        // setTime('bell', "None");
+      clearBell();
+      teamsEnabled = [true, true];
+      buzzerPressed = false;
+      teamBuzzed = null;
+      clearInterval(countDownInterval);
+      setLabel(1, "Enabled", "white");
+      setLabel(2, "Enabled", "white");
     }
 
     function incorrectReset(team) {
-        clearInterval(countDownInterval);
-        teamsEnabled[team-1] = false;
-        teamsEnabled.forEach((enabled, index) => {
-            if (enabled) {
-                setLabel(index+1, "Enabled", "black");
-            }
-            else {
-                setLabel(index+1, "Disabled", "red");
-            }
-        });
-        buzzerPressed = false;
-        teamBuzzed = null;
+      clearInterval(countDownInterval);
+      teamsEnabled[team-1] = false;
+      teamsEnabled.forEach((enabled, index) => {
+        if (enabled) {
+          setLabel(index+1, "Enabled", "white");
+        } else {
+          setLabel(index+1, "Disabled", "#FFD700");
+        }
+      });
+      buzzerPressed = false;
+      teamBuzzed = null;
     }
 
     function setLabel(team, label, color) {
-        document.getElementById(`team${team}-label`).textContent = label;
-        document.getElementById(`team${team}-label`).style.color = color;
+      document.getElementById(`team${team}-label`).textContent = label;
+      document.getElementById(`team${team}-label`).style.color = color;
     }
 
     function setCircleColor(team, color) {
-        document.getElementById(`team${team}-circle`).style.backgroundColor = color;
-    }
-
-    function setTime(team, text) {
-        document.getElementById(`${team}-time`).textContent = text;
+      document.getElementById(`team${team}-circle`).style.backgroundColor = color;
     }
 
     function calculateTime() {
-        const now = new Date();
-
-        // Get the time in a locale-sensitive format
-        const timeWithoutMilliseconds = now.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false, // Use 24-hour time format; change to `true` for 12-hour format
-            timeZone: 'America/New_York', 
-        });
-
-        // Get milliseconds
-        const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
-
-        // Combine them
-        const timeWithMilliseconds = `${timeWithoutMilliseconds}.${milliseconds}`;
-        return timeWithMilliseconds;
+      const now = new Date();
+      const timeWithoutMilliseconds = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone: 'America/New_York', 
+      });
+      const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
+      return `${timeWithoutMilliseconds}.${milliseconds}`;
     }
 
     function bell() {
-        bellAudio.play().then(() => {
-            bellRung = true;
-            document.getElementById('bell').style.backgroundColor = "green";
-            // setTime('bell', calculateTime());
-        });
+      bellAudio.play().then(() => {
+        bellRung = true;
+        document.getElementById('bell').style.backgroundColor = "green";
+      });
     }
 
     function clearBell() {
-        bellRung = false;
-        document.getElementById('bell').style.backgroundColor = "gray";
-        // setTime('bell', "None");
+      bellRung = false;
+      document.getElementById('bell').style.backgroundColor = "#2F4F4F";
     }
 
     function startCountdown(team) {
-        let secondsLeft = 15;
-        countDownInterval = setInterval(() => {
-            secondsLeft -= 1;
-            setLabel(team, secondsLeft, 'red');
-            if (secondsLeft == 0) {
-                clearInterval(countDownInterval);
-                buzzerAudio.play();
-            }
-        }, 1000);   
+      let secondsLeft = 15;
+      countDownInterval = setInterval(() => {
+        secondsLeft -= 1;
+        setLabel(team, secondsLeft, "#FFD700");
+        if (secondsLeft === 0) {
+          clearInterval(countDownInterval);
+          buzzerAudio.play();
+        }
+      }, 1000);   
     }
 
     window.addEventListener('keydown', function(event) {
-        // Team 1
-        if (event.key === 'a' && teamsEnabled[0]) {
-            if (bellRung && !buzzerPressed) {
-                setLabel(1, "Winner!", "green");
-                startCountdown(1)
-                buzzerPressed = true;
-                teamBuzzed = 1;
-
-            }
-            else if (bellRung && buzzerPressed) {
-                setLabel(1, "Loser!", "red");
-            }
-            else {
-                setLabel(1, "Disabled", "red");
-            }
-            // setTime(1, calculateTime());
-            teamsEnabled[0] = false;
-        } 
-        // Team 2
-        else if (event.key === 'l' && teamsEnabled[1]) {
-            if (bellRung && !buzzerPressed) {
-                setLabel(2, "Winner!", "green");
-                startCountdown(2)
-                buzzerPressed = true;
-                teamBuzzed = 2;
-            }
-            else if (bellRung && buzzerPressed) {
-                setLabel(2, "Loser!", "red");
-            }
-            else {
-                teamsEnabled[1] = false;
-                setLabel(2, "Disabled", "red");
-            }
-            // setTime(2, calculateTime());
-            teamsEnabled[1] = false;
+      // Team 1
+      if (event.key === 'a' && teamsEnabled[0]) {
+        if (bellRung && !buzzerPressed) {
+          setLabel(1, "Winner!", "green");
+          startCountdown(1);
+          buzzerPressed = true;
+          teamBuzzed = 1;
+        } else if (bellRung && buzzerPressed) {
+          setLabel(1, "Loser!", "#FFD700");
+        } else {
+          setLabel(1, "Disabled", "#FFD700");
         }
+        teamsEnabled[0] = false;
+      }
+      // Team 2
+      else if (event.key === 'l' && teamsEnabled[1]) {
+        if (bellRung && !buzzerPressed) {
+          setLabel(2, "Winner!", "green");
+          startCountdown(2);
+          buzzerPressed = true;
+          teamBuzzed = 2;
+        } else if (bellRung && buzzerPressed) {
+          setLabel(2, "Loser!", "#FFD700");
+        } else {
+          teamsEnabled[1] = false;
+          setLabel(2, "Disabled", "#FFD700");
+        }
+        teamsEnabled[1] = false;
+      }
     });
 
     window.addEventListener('keydown', function(event) {
-        if (event.key === 'a') {
-            setCircleColor(1, "red");
-        }
-        else if (event.key === 'l') {
-            setCircleColor(2, "red");
-        }
+      if (event.key === 'a') {
+        setCircleColor(1, "#FFD700");
+      } else if (event.key === 'l') {
+        setCircleColor(2, "#FFD700");
+      }
     });
 
     window.addEventListener('keyup', function(event) {
-        if (event.key === 'a') {
-            setCircleColor(1, "gray");
-        }
-        else if (event.key === 'l') {
-            setCircleColor(2, "gray");
-        }
+      if (event.key === 'a') {
+        setCircleColor(1, "#2F4F4F");
+      } else if (event.key === 'l') {
+        setCircleColor(2, "#2F4F4F");
+      }
     });
   </script>
 </body>
 </html>
 
-
 <script>
-//CLI
-//help
-//setScore
-//resetCell(ind)
-//completeClear
+// CLI Example Commands (for reference)
+// help
+// setScore
+// resetCell(ind)
+// completeClear
 </script>
