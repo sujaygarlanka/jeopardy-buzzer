@@ -256,7 +256,7 @@
      ************************************************************/
     #final-jeopardy-trigger-container {
       display: none;
-      margin-top: 20px;
+      margin-top: 100px;
     }
     #final-jeopardy-container {
       position: fixed;
@@ -296,7 +296,7 @@
   <div id="santa">
     <img
       id="santa-img"
-      src="https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/santa.gif"
+      src="https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/media/santa.gif"
       alt="Santa with Reindeer"
     />
     <div id="banner">Banner Placeholder</div>
@@ -378,7 +378,7 @@
     //////////////////////////////////////////////////////
     // 1) Jeopardy Board + Category Code
     //////////////////////////////////////////////////////
-    const dataUrl = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; 
+    const dataUrl = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/json/data.json'; 
     let data;
     let currentQuestionIndex = null; 
     let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); 
@@ -541,9 +541,9 @@
     //////////////////////////////////////////////////////
     // 3) Buzzer + Team Code
     //////////////////////////////////////////////////////
-    const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
-    const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/buzzer.mp3');
-    const incorrectAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/wrong.m4a');    
+    const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/audio/bell.mp3');
+    const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/audio/buzzer.mp3');
+    const incorrectAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/audio/wrong.m4a');    
 
     let teamScores = [0, 0];
     let bellRung = false;
@@ -718,8 +718,8 @@
     const santa  = document.getElementById("santa");
     const banner = document.getElementById("banner");
 
-    const jokesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/jokes.json";
-    const quotesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/quotes.json";
+    const jokesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/json/jokes.json";
+    const quotesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/json/quotes.json";
 
     fetch(jokesUrl)
       .then((response) => {
