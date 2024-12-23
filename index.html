@@ -290,6 +290,10 @@
         const questionText = document.getElementById("question-text");
         questionText.textContent = `Answer: ${data.questions[currentQuestionIndex].answer}`;
         showAnswerClicked = true; // Mark "Show Answer" as clicked
+        if (teamBuzzed) {
+          // Update the score
+          updateScore(teamBuzzed, data.questions[currentQuestionIndex].value);
+        }
 
         // Hide the "Show Answer" button
         document.getElementById("show-answer-button").classList.add("hidden");
@@ -300,14 +304,18 @@
     function handleIncorrect() {
       let value = data.questions[currentQuestionIndex].value
       if (teamBuzzed) {
-        teamScores[teamBuzzed - 1] -= value;
-        document.getElementById(`team${teamBuzzed}-score`).textContent = teamScores[teamBuzzed - 1];
-        localStorage.setItem("teamScores", JSON.stringify(teamScores));
-
+        // Update the score
+        updateScore(teamBuzzed, -value);
         // Reset the buzzer
         incorrectReset(teamBuzzed);
       }
 
+    }
+
+    function updateScore(team, value) {
+        teamScores[team - 1] += value;
+        document.getElementById(`team${team}-score`).textContent = teamScores[team - 1];
+        localStorage.setItem("teamScores", JSON.stringify(teamScores));
     }
 
     // Handle Correct button click
