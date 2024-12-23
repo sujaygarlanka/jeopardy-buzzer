@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Christmas Jeopardy Board</title>
+  <title>Christmas Jeopardy Board with Night Snow</title>
 
   <!-- Holiday-themed font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -11,6 +11,9 @@
     href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" 
     rel="stylesheet"
   />
+
+  <!-- Particles.js library (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
   <style>
     /* 
@@ -24,17 +27,52 @@
 
     /* 
       -----------------------------------------------
+      Ensure html and body take up the full viewport
+      and hide horizontal overflow.
+      -----------------------------------------------
+    */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden; 
+      overflow-y: hidden;
+      /* Uncomment below if you want to disable all vertical scrolling:
+      overflow-y: hidden; 
+      */
+    }
+
+    /* 
+      -----------------------------------------------
+      Particles Container
+      -----------------------------------------------
+      Keep the container fixed to fill the entire screen.
+    */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Ensures particles are behind the content */
+      pointer-events: none; /* Don't allow interactions with the particle layer */
+    }
+
+    /* 
+      -----------------------------------------------
       General Body and Font 
       -----------------------------------------------
     */
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Mountains of Christmas', cursive, sans-serif;
-      font-size: 20px; 
-      background: url('https://images.unsplash.com/photo-1558419362-4b36b6f10f58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')
-        no-repeat center center fixed;
-      background-size: cover;
+      font-size: 20px;
+      /*
+        A darker gradient at the top (#000010) transitioning
+        to a slightly lighter but still dark bottom (#20202f).
+      */
+      background: linear-gradient(to bottom, #000010, #20202f);
       color: #fff;
       text-align: center;
     }
@@ -123,7 +161,7 @@
     }
 
     .square-button:hover {
-      background-color: #228B22 /* Darker green on hover */
+      background-color: #228B22; /* Darker green on hover */
     }
 
     #bell {
@@ -193,6 +231,8 @@
       flex-direction: column;
       box-shadow: 0 0 15px rgba(0,0,0,0.7);
       border-radius: 10px;
+      position: relative; /* so it appears over the particles */
+      z-index: 2; /* ensure question box is above the particle layer */
     }
 
     #question-text {
@@ -218,7 +258,6 @@
     }
 
     button:hover {
-      /* Optionally, you can create a second variable for hover if you want a different shade. */
       background-color: var(--deep-christmas-red);
       opacity: 0.8; /* Slight opacity for a hover effect */
     }
@@ -240,6 +279,10 @@
   </style>
 </head>
 <body>
+
+  <!-- Snow Particles Container -->
+  <div id="particles-js"></div>
+
   <div id="top-bar">
       <!-- Team 1 Section Inline -->
       <div class="team-group">
@@ -535,13 +578,70 @@
       }
     });
   </script>
+
+  <!-- Initialize Particles.js -->
+  <script>
+    // Simple config for "snow" falling
+    particlesJS('particles-js', {
+      particles: {
+        number: {
+          value: 80,           // How many snowflakes
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: '#ffffff'     // Snow is white
+        },
+        shape: {
+          type: 'circle'       // Basic circles
+        },
+        opacity: {
+          value: 0.8,
+          random: false,
+          anim: {
+            enable: false
+          }
+        },
+        size: {
+          value: 5,            // Flake size
+          random: true,        // Randomly sized
+          anim: {
+            enable: false
+          }
+        },
+        line_linked: {
+          enable: false        // No connecting lines
+        },
+        move: {
+          enable: true,
+          speed: 2,            // Fall speed
+          direction: 'bottom', // Snow falls down
+          random: false,
+          straight: false,
+          out_mode: 'out',     // Flakes disappear out of screen
+          bounce: false,
+          attract: {
+            enable: false
+          }
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: false       // Hover interaction off (optional)
+          },
+          onclick: {
+            enable: false
+          },
+          resize: true          // Recalculate on window resize
+        },
+        modes: {}
+      },
+      retina_detect: true
+    });
+  </script>
 </body>
 </html>
-
-<script>
-// CLI Example Commands (for reference)
-// help
-// setScore
-// resetCell(ind)
-// completeClear
-</script>
