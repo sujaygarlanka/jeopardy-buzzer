@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy Buzzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        #quote-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Didot', sans-serif;
+            font-style: italic;
+            font-size: 24px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+        }
+        .score {
+            font-size: 32px;
+            color: blue;
+            margin: 10px 0;
+        }
+        .score.red {
+            color: red;
+        }
+        .circle {
+            width: 150px;
+            height: 150px;
+            background-color: gray;
+            border-radius: 50%;
+            margin: 20px 0 10px 0;
+            border: 2px solid black;
+        }
+        .label {
+            font-size: 30px;
+            color: green;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: 40%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .special-button {
+            width: 80%;
+            margin: 20px;
+            padding: 20px 0;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+        .input-container button {
+            border-radius: 20px;
+        }
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+        .input-container input {
+            padding: 10px;
+            font-size: 14px;
+            width: 80%;
+            text-align: center;
+            margin: 15px;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div id="quote-box">
+        <p id="quote-text">Fetching a quote...</p>
+    </div>
+    <div class="container">
+        <div class="teams">
+            <!-- Team 1 -->
+            <div class="team">
+                <h2>Team 1</h2>
+                <div class="score" id="team1-score">0</div>
+                <!-- <input type="number" step=100 id="team1-input" placeholder="Enter score" /> -->
+                <div class="input-container">
+                    <button onclick="decrement(1)">-</button>
+                    <input type="number" step=100 id="team1-input" value="0" />
+                    <button onclick="increment(1)">+</button>
+                </div>
+                <button onclick="updateTeamScore(1)">Add to Team 1</button>
+                <div id="team1-circle" class="circle"></div>
+                <div class="label" id="team1-label">Enabled</div> <!-- Label -->
+                <button class="special-button" onclick="reset()">RESET</button>
+            </div>
+
+            <!-- Team 2 -->
+            <div class="team">
+                <h2>Team 2</h2>
+                <div class="score red" id="team2-score">0</div>
+                <div class="input-container">
+                    <button onclick="decrement(2)">-</button>
+                    <input type="number" step=100 id="team2-input" value="0" />
+                    <button onclick="increment(2)">+</button>
+                </div>
+                <button onclick="updateTeamScore(2)">Add to Team 2</button>
+                <div id="team2-circle" class="circle"></div>
+                <div class="label" id="team2-label">Enabled</div> <!-- Label -->
+                <button class="special-button" onclick="bell()">BELL</button>
+            </div>
+        </div>
+
+        <table>
+            <tbody>
+                <thead>
+                    <th colspan="3">Timing Table</th>
+                </thead>
+                <tr>
+                    <td>Team 1</td>
+                    <td>Team 2</td>
+                    <td>Bell</td>
+                </tr>
+                <tr>
+                    <td id="1-time" >None</td>
+                    <td id="2-time">None</td>
+                    <td id="bell-time">None</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="align-self: flex-start;">
+            <h2>Instructions</h2>
+            <p>1. Press 'a' to buzz in for Team 1 and 'l' for Team 2.</p>
+            <p>2. Press 'BELL' to ring the bell and open the gates for people to buzz!</p>
+            <p>3. If someone buzzes before the bell, their buzzer is disabled.</p>
+            <p>4. Press 'RESET' to reset the buttons, but not score.</p>
+        </div>
+    </div>
+
+    <script>
+        const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
+        const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/buzzer.mp3');
+
+        let teamScores = [0, 0];
+
+        let bellRung = false;
+        let teamsEnabled = [true, true];
+        let buzzerPressed = false;
+        let countDownInterval;
+
+        reset();
+        loadJoke();
+        loadScores();
+
+        function loadScores() {
+            const teamScoresStorage = localStorage.getItem("teamScores");
+            if (teamScoresStorage) {
+                teamScores = JSON.parse(teamScoresStorage);
+                teamScores.map((score, index) => {
+                    document.getElementById(`team${index+1}-score`).textContent = score;
+                });
+            }
+        }
+
+        function loadJoke() {
+            fetch("https://icanhazdadjoke.com/", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            })
+            .then(async response => {
+                if (response.ok) {
+                    const joke = await response.json();
+                    document.getElementById("quote-text").textContent = joke.joke;
+                }
+            })
+        }
+
+        function updateTeamScore(team) {
+            const input = document.getElementById(`team${team}-input`);
+            const value = parseInt(input.value);
+            if (isNaN(value)) {
+                alert("Please enter a valid integer for Team.");
+                return;
+            }
+            teamScores[team-1] += value;
+            document.getElementById(`team${team}-score`).textContent = teamScores[team-1];
+            localStorage.setItem("teamScores", JSON.stringify(teamScores));
+            input.value = "0";
+        }
+
+        function decrement(team) {
+            const input = document.getElementById(`team${team}-input`);
+            const value = parseInt(input.value);
+            if (isNaN(value)) {
+                alert("Please enter a valid integer for Team.");
+                return;
+            }
+            input.value = value - 100;
+        }
+
+        function increment(team) {
+            const input = document.getElementById(`team${team}-input`);
+            const value = parseInt(input.value);
+            if (isNaN(value)) {
+                alert("Please enter a valid integer for Team.");
+                return;
+            }
+            input.value = value + 100;
+        }
+
+        function reset(cleartable=true) {
+            bellRung = false;
+            teamsEnabled = [true, true];
+            buzzerPressed = false;
+            clearInterval(countDownInterval);
+            setLabel(1, "Enabled", "black");
+            setLabel(2, "Enabled", "black");
+
+            if(cleartable){
+                setTime(1, "None");
+                setTime(2, "None");
+                setTime('bell', "None");
+            }
+        }
+
+        function setLabel(team, label, color) {
+            document.getElementById(`team${team}-label`).textContent = label;
+            document.getElementById(`team${team}-label`).style.color = color;
+        }
+
+        function setCircleColor(team, color) {
+            document.getElementById(`team${team}-circle`).style.backgroundColor = color;
+        }
+
+        function setTime(team, text) {
+            document.getElementById(`${team}-time`).textContent = text;
+        }
+
+        function calculateTime() {
+            const now = new Date();
+
+            // Get the time in a locale-sensitive format
+            const timeWithoutMilliseconds = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false, // Use 24-hour time format; change to `true` for 12-hour format
+                timeZone: 'America/New_York', 
+            });
+
+            // Get milliseconds
+            const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
+
+            // Combine them
+            const timeWithMilliseconds = `${timeWithoutMilliseconds}.${milliseconds}`;
+            return timeWithMilliseconds;
+        }
+
+        function bell() {
+            bellAudio.play().then(() => {
+                bellRung = true;
+                setTime('bell', calculateTime());
+            });
+        }
+
+        function startCountdown(team) {
+            let secondsLeft = 15;
+            countDownInterval = setInterval(() => {
+                secondsLeft -= 1;
+                setLabel(team, secondsLeft, 'red');
+                if (secondsLeft == 0) {
+                    clearInterval(countDownInterval);
+                    buzzerAudio.play();
+                    //neels code
+                    reset(false) 
+                }
+            }, 1000);
+            //neels code
+            
+        }
+
+        window.addEventListener('keydown', function(event) {
+            // Team 1
+            if (event.key === 'a' && teamsEnabled[0]) {
+                if (bellRung && !buzzerPressed) {
+                    setLabel(1, "Winner!", "green");
+                    startCountdown(1)
+                    buzzerPressed = true;
+                }
+                else if (bellRung && buzzerPressed) {
+                    setLabel(1, "Loser!", "red");
+                }
+                else {
+                    setLabel(1, "Disabled", "red");
+                }
+                setTime(1, calculateTime());
+                teamsEnabled[0] = false;
+            } 
+            // Team 2
+            else if (event.key === 'l' && teamsEnabled[1]) {
+                if (bellRung && !buzzerPressed) {
+                    setLabel(2, "Winner!", "green");
+                    startCountdown(2)
+                    buzzerPressed = true;
+                }
+                else if (bellRung && buzzerPressed) {
+                    setLabel(2, "Loser!", "red");
+                }
+                else {
+                    teamsEnabled[1] = false;
+                    setLabel(2, "Disabled", "red");
+                }
+                setTime(2, calculateTime());
+                teamsEnabled[1] = false;
+            }
+        });
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'a') {
+                setCircleColor(1, "red");
+            }
+            else if (event.key === 'l') {
+                setCircleColor(2, "red");
+            }
+        });
+
+        window.addEventListener('keyup', function(event) {
+            if (event.key === 'a') {
+                setCircleColor(1, "gray");
+            }
+            else if (event.key === 'l') {
+                setCircleColor(2, "gray");
+            }
+        });
+    </script>
+
+</body>
+</html>
