@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Christmas Jeopardy Board with Night Snow</title>
+  <title>Christmas Jeopardy Board with Night Snow & Santa</title>
 
   <!-- Holiday-themed font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -20,23 +20,24 @@
       --deep-christmas-red: rgba(178, 34, 34, 0.9);
     }
 
-    html,
-    body {
+    /* Make sure html and body occupy the full screen */
+    html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
-      overflow-y: hidden; 
+      overflow-x: hidden; 
+      overflow-y: hidden;
     }
 
+    /* The background snow container */
     #particles-js {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: -1; /* behind everything */
       pointer-events: none;
     }
 
@@ -48,6 +49,11 @@
       text-align: center;
     }
 
+
+
+    /***********************************************
+     * Top Bar, Team Scores, Buttons, etc.
+     ***********************************************/
     #top-bar {
       display: flex;
       align-items: center;
@@ -75,7 +81,7 @@
     .score {
       font-size: 30px;
       margin: 5px 0;
-      color: #FFD700; /* Gold color for scores */
+      color: #FFD700; 
     }
 
     .button-container {
@@ -89,7 +95,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background-color: #2F4F4F; 
+      background-color: #2F4F4F;
       color: white;
       border: none;
       cursor: pointer;
@@ -118,7 +124,7 @@
     .square-button {
       padding: 12px 28px;  
       border-radius: 5px;
-      background-color: #008000; /* Green button */
+      background-color: #008000; 
       color: white;
       border: none;
       cursor: pointer;
@@ -126,21 +132,18 @@
     }
 
     .square-button:hover {
-      background-color: #228B22;
+      background-color: #228B22; 
     }
 
     #bell {
       background-color: #2F4F4F;
     }
 
-    /*
-      -----------------------------------------------
-      Jeopardy Board Grid
-      -----------------------------------------------
-    */
+    /***********************************************
+     * Jeopardy Board Grid 
+     ***********************************************/
     #jeopardy-board {
       display: grid;
-      /* We assume 5 categories, so 5 columns total */
       grid-template-columns: repeat(5, 1fr);
       gap: 5px;
       width: 80%;
@@ -158,13 +161,12 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
 
-    /* Replace the category color with our red variable */
     .category {
       background-color: var(--deep-christmas-red);
     }
 
     .question:hover {
-      background-color: #FFD700; /* Gold on hover */
+      background-color: #FFD700;
       color: #000;
     }
 
@@ -175,6 +177,9 @@
       pointer-events: none;
     }
 
+    /***********************************************
+     * Question Box
+     ***********************************************/
     #question-box {
       visibility: hidden; 
       width: 800px;
@@ -192,7 +197,7 @@
       flex-direction: column;
       box-shadow: 0 0 15px rgba(0,0,0,0.7);
       border-radius: 10px;
-      position: relative; 
+      position: relative;
       z-index: 2;
     }
 
@@ -226,7 +231,6 @@
       display: none;
     }
 
-    /* For the "Incorrect" button */
     .red-button {
       background-color: var(--deep-christmas-red);
       color: white;
@@ -236,15 +240,64 @@
       background-color: var(--deep-christmas-red);
       opacity: 0.8;
     }
+
+    /* Container for Santa + banner */
+    #santa {
+      position: fixed;
+      bottom: -25px;     /* How high above the bottom the container sits */
+      left: 120%;       /* Start well off-screen to the right */
+      display: flex;    /* So Santa & banner sit side by side */
+      align-items: center;
+      animation: santa-run 15s linear infinite;
+      z-index: 3;       /* Above backgrounds/particles, but below other UI if needed */
+    }
+
+    /* Santa image styling (optional) */
+    #santa-img {
+      width: 150px;    /* Adjust the size to fit your GIF */
+      height: auto;
+      display: block;
+    }
+
+    /* The trailing text banner */
+    #banner {
+      margin-left: 20px;           /* Space between Santa and text */
+      background-color: gold;      /* Banner background color, pick your style */
+      color: red;                  /* Banner text color */
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 24px;             /* Adjust text size as desired */
+      white-space: nowrap;         /* Keep text on one line */
+    }
+
+    /* Keyframes: move from right (off-screen) to left (off-screen) */
+    @keyframes santa-run {
+      0% {
+        left: 120%;
+      }
+      100% {
+        left: -800px; /* Enough negative space so the entire container exits left */
+      }
+    }
   </style>
 </head>
 <body>
-
   <!-- Snow Particles Container -->
   <div id="particles-js"></div>
 
+  <!-- Santa & Reindeer container with animation -->
+  <div id="santa">
+    <img
+      id="santa-img"
+      src="santa.gif"
+      alt="Santa with Reindeer"
+    />
+    <div id="banner">Merry Christmas!</div>
+  </div>
+
   <div id="top-bar">
-      <!-- Team 1 Section Inline -->
+      <!-- Team 1 Section -->
       <div class="team-group">
           <div id="team-1">
               <span>Team 1</span>
@@ -252,18 +305,18 @@
           </div>
           <div class="button-container">
               <button id="team1-circle" class="round-button"></button>
-              <span id="team1-label" class="label" >Enabled</span>
+              <span id="team1-label" class="label">Enabled</span>
           </div>
       </div>
 
       <!-- Middle Buttons -->
       <div id="middle-buttons">
           <button class="square-button" onclick="reset()">Reset</button>
-          <button id="bell" class="round-button" ></button>
+          <button id="bell" class="round-button"></button>
           <button class="square-button" onclick="bell()">Bell</button>
       </div>
 
-      <!-- Team 2 Section Inline -->
+      <!-- Team 2 Section -->
       <div class="team-group">
           <div class="button-container">
               <button id="team2-circle" class="round-button"></button>
@@ -277,10 +330,6 @@
   </div>
 
   <!-- Jeopardy Board -->
-  <!-- 
-       REMOVED the static Category 1, 2, 3, 4, 5 
-       Instead, we dynamically insert them in loadBoard() below
-  -->
   <div id="jeopardy-board"></div>
 
   <!-- Question Box -->
@@ -305,9 +354,11 @@
     let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); 
     let showAnswerClicked = false; 
 
+    // Attach event listeners
     document.getElementById("back-button").addEventListener("click", showBoard);
     document.getElementById("show-answer-button").addEventListener("click", showAnswer);
 
+    // Fetch JSON data (categories, questions)
     fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -324,7 +375,7 @@
       const board = document.getElementById("jeopardy-board");
       board.innerHTML = "";
 
-      // 1) Insert category headers from data.categories
+      // Insert category headers
       data.categories.forEach((cat) => {
         const categoryDiv = document.createElement("div");
         categoryDiv.className = "category";
@@ -332,18 +383,17 @@
         board.appendChild(categoryDiv);
       });
 
-      // 2) Insert questions from data.questions
+      // Insert questions
       data.questions.forEach((question, index) => {
         const questionDiv = document.createElement("div");
         questionDiv.className = "question";
         questionDiv.textContent = `$${question.value}`;
 
-        // If this question was already clicked in a previous session, mark it
+        // Mark clicked questions
         if (clickedButtons.has(index)) {
           questionDiv.classList.add("clicked");
         }
 
-        // Click event
         questionDiv.onclick = () => {
           if (!clickedButtons.has(index)) {
             handleClick(index);
@@ -368,6 +418,7 @@
     }
 
     function showBoard() {
+      // If user viewed the answer, mark question as clicked
       if (currentQuestionIndex !== null && showAnswerClicked) {
         const buttons = document.querySelectorAll(".question");
         buttons[currentQuestionIndex].classList.add("clicked");
@@ -391,6 +442,7 @@
     }
 
     function handleIncorrect() {
+      if (currentQuestionIndex === null) return;
       let value = data.questions[currentQuestionIndex].value;
       if (teamBuzzed) {
         updateScore(teamBuzzed, -value);
@@ -426,7 +478,7 @@
       const teamScoresStorage = localStorage.getItem("teamScores");
       if (teamScoresStorage) {
         teamScores = JSON.parse(teamScoresStorage);
-        teamScores.map((score, index) => {
+        teamScores.forEach((score, index) => {
           document.getElementById(`team${index+1}-score`).textContent = score;
         });
       }
@@ -472,7 +524,7 @@
         minute: '2-digit',
         second: '2-digit',
         hour12: false,
-        timeZone: 'America/New_York', 
+        timeZone: 'America/New_York'
       });
       const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
       return `${timeWithoutMilliseconds}.${milliseconds}`;
@@ -542,9 +594,9 @@
     });
 
     window.addEventListener('keyup', function(event) {
-      if (event.key === 'a') {
+      if (event.key === 'a' && teamBuzzed !== 1) {
         setCircleColor(1, "#2F4F4F");
-      } else if (event.key === 'l') {
+      } else if (event.key === 'l' && teamBuzzed !== 2) {
         setCircleColor(2, "#2F4F4F");
       }
     });
@@ -554,7 +606,10 @@
   <script>
     particlesJS('particles-js', {
       particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
+        number: { 
+          value: 80, 
+          density: { enable: true, value_area: 800 } 
+        },
         color: { value: '#ffffff' },
         shape: { type: 'circle' },
         opacity: { value: 0.8, anim: { enable: false } },
