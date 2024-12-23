@@ -37,7 +37,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1; /* behind everything */
+      z-index: -1;
       pointer-events: none;
     }
 
@@ -141,7 +141,7 @@
 
     /* 
       ==========================================================
-      Jeopardy Board 
+      Jeopardy Board
       ==========================================================
     */
     #jeopardy-board {
@@ -245,19 +245,19 @@
       opacity: 0.8;
     }
 
-    /* 
+    /*
       ==========================================================
-      Santa with Banner (Right -> Left) - 
+      Santa with Banner (Right -> Left)
       forcibly reset & measure approach
       ==========================================================
     */
     #santa {
       position: fixed;
-      bottom: -25px;      
-      left: 120%;         
+      bottom: -25px;
+      left: 120%;
       display: flex;
       align-items: center;
-      z-index: 3;         
+      z-index: 3; /* Over the background/particles */
 
       /* We'll manipulate these transitions in JS to reset or animate */
       transition-property: left;
@@ -266,20 +266,20 @@
     }
 
     #santa-img {
-      width: 150px;  
+      width: 150px;
       height: auto;
       display: block;
     }
 
     #banner {
       margin-left: 20px;      
-      background-color: gold; 
-      color: var(--deep-christmas-red); 
+      background-color: gold;
+      color: var(--deep-christmas-red);
       font-weight: bold;
       padding: 10px 20px;
       border-radius: 8px;
-      font-size: 24px;     
-      white-space: nowrap; 
+      font-size: 24px;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -287,7 +287,7 @@
   <!-- Snow Particles Container -->
   <div id="particles-js"></div>
 
-  <!-- Santa & Reindeer container with dynamic transition -->
+  <!-- Santa Container -->
   <div id="santa">
     <img
       id="santa-img"
@@ -297,6 +297,7 @@
     <div id="banner">Banner Placeholder</div>
   </div>
 
+  <!-- Top Bar -->
   <div id="top-bar">
       <!-- Team 1 Section -->
       <div class="team-group">
@@ -349,7 +350,7 @@
     //////////////////////////////////////////////////////
     // 1) Jeopardy Board + Category Code
     //////////////////////////////////////////////////////
-    const url = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; 
+    const dataUrl = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; 
     let data;
     let currentQuestionIndex = null; 
     let clickedButtons = new Set(JSON.parse(localStorage.getItem('clickedButtons')) || []); 
@@ -358,7 +359,7 @@
     document.getElementById("back-button").addEventListener("click", showBoard);
     document.getElementById("show-answer-button").addEventListener("click", showAnswer);
 
-    fetch(url)
+    fetch(dataUrl)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -600,73 +601,132 @@
     });
 
     //////////////////////////////////////////////////////////
-    // 3) Quotes Logic for Santa Banner - Forcible Reset
+    // 3) Logic for Santa Banner with Quotes *and* Jokes
     //////////////////////////////////////////////////////////
     let quotes = [];
-    let usedIndices = new Set();
+    let jokes = [];
+    let usedIndicesQuotes = new Set();
+    let usedIndicesJokes = new Set();
 
     const santa  = document.getElementById("santa");
     const banner = document.getElementById("banner");
 
+    // We'll load jokes from jokes.json AND quotes from quotes.json
+    const jokesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/jokes.json";
     const quotesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/quotes.json";
-    fetch(quotesUrl)
+    // Step 1: Load jokes
+    fetch(jokesUrl)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Failed to fetch quotes.json! Status: ${response.status}`);
+          throw new Error(`Failed to fetch jokes.json! Status: ${response.status}`);
         }
         return response.json();
       })
-      .then((jsonData) => {
-        quotes = jsonData.quotes || [];
-        // Start after quotes load
+      .then((jokesData) => {
+        // jokesData is an array of objects like:
+        // [ { "id": "...", "joke": "..." }, ... ]
+        jokes = jokesData || [];
+        console.log("Loaded jokes: ", jokes.length);
+        // Step 2: Load quotes
+        return fetch(quotesUrl);
+      })
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error(`Failed to fetch quotes.json! Status: ${resp.status}`);
+        }
+        return resp.json();
+      })
+      .then((quotesData) => {
+        // quotesData = { "quotes": ["q1", "q2"] } 
+        quotes = quotesData.quotes || [];
+        console.log("Loaded quotes: ", quotes.length);
+        // Start after jokes & quotes load
         startSantaRun();
       })
       .catch((err) => {
-        console.error("Error loading quotes:", err);
+        console.error("Error loading jokes/quotes:", err);
         banner.textContent = "Merry Christmas!";
+        // Start anyway
         startSantaRun();
       });
 
+    // 85% chance we pick a joke, 15% chance we pick a quote
+    // If the chosen set is empty, fallback to the other set
+    function getRandomText() {
+      if (!jokes.length && !quotes.length) {
+        // No data at all, fallback
+        return "Merry Christmas!";
+      }
+
+      // 85% => jokes, 15% => quotes
+      const chance = Math.random() * 100; // [0..100)
+      const pickJoke = (chance < 85);
+
+      if (pickJoke && jokes.length) {
+        return getRandomJoke();
+      } else if (!pickJoke && quotes.length) {
+        return getRandomQuote();
+      }
+
+      // fallback if the chosen set is empty
+      if (jokes.length) return getRandomJoke();
+      if (quotes.length) return getRandomQuote();
+      return "Merry Christmas!";
+    }
+
     function getRandomQuote() {
+      // Example: "quotes" is an array of strings
       if (!quotes.length) return "Merry Christmas!";
-      if (usedIndices.size === quotes.length) {
-        usedIndices.clear();
+      if (usedIndicesQuotes.size === quotes.length) {
+        usedIndicesQuotes.clear();
       }
       let idx = Math.floor(Math.random() * quotes.length);
-      while (usedIndices.has(idx)) {
+      while (usedIndicesQuotes.has(idx)) {
         idx = Math.floor(Math.random() * quotes.length);
       }
-      usedIndices.add(idx);
+      usedIndicesQuotes.add(idx);
       return quotes[idx];
     }
 
-    function startSantaRun() {
-      // === Step A: Reset transition so we can jump instantly
-      santa.style.transitionDuration = "0s";  
-      // Jump to the right edge
-      santa.style.left = "120%"; 
-      // Force reflow so the browser acknowledges this position
-      santa.getBoundingClientRect();
-
-      // === Step B: Set new quote
-      banner.textContent = getRandomQuote();
-
-      // === Step C: Measure new container width
-      const containerWidth = santa.offsetWidth;
-
-      // === Step D: Now set the transition for a consistent speed
-      const totalDistance = window.innerWidth + containerWidth + 60; 
-      // px per second
-      const speedPxPerSec = 200;
-      const durationSeconds = totalDistance / speedPxPerSec;
-      santa.style.transitionDuration = durationSeconds + "s";
-
-      // === Step E: Move Santa fully off the left side
-      santa.style.left = -containerWidth + "px";
+    function getRandomJoke() {
+      // "jokes" is an array of objects: { "id": "..", "joke": ".." }
+      if (!jokes.length) return "Merry Christmas!";
+      if (usedIndicesJokes.size === jokes.length) {
+        usedIndicesJokes.clear();
+      }
+      let idx = Math.floor(Math.random() * jokes.length);
+      while (usedIndicesJokes.has(idx)) {
+        idx = Math.floor(Math.random() * jokes.length);
+      }
+      usedIndicesJokes.add(idx);
+      return jokes[idx].joke; // Return just the "joke" text
     }
 
+    // The main function that sets Santa's position & text
+    function startSantaRun() {
+      // A) Reset transition to 0s so Santa can jump instantly to right edge
+      santa.style.transitionDuration = "0s";
+      santa.style.left = "120%";
+      santa.getBoundingClientRect(); // force reflow
+
+      // B) Set the text (85% jokes, 15% quotes)
+      banner.textContent = getRandomText();
+
+      // C) Measure container width
+      const containerWidth = santa.offsetWidth;
+
+      // D) Decide speed & duration
+      const totalDistance = window.innerWidth + containerWidth + 60;
+      const speedPxPerSec = 200;  // adjust speed
+      const durationSeconds = totalDistance / speedPxPerSec;
+      santa.style.transitionDuration = `${durationSeconds}s`;
+
+      // E) Move fully off the left
+      santa.style.left = `-${containerWidth}px`;
+    }
+
+    // Once done crossing, repeat with new text
     santa.addEventListener("transitionend", () => {
-      // Once fully crossed, repeat
       startSantaRun();
     });
   </script>
