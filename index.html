@@ -23,20 +23,16 @@
     /************************************************************
      * Body + Particles
      ************************************************************/
-    html, body {
+     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      /* Keep overflow hidden as requested */
-      overflow-x: hidden;
+      overflow-x: hidden; 
       overflow-y: hidden;
-      background: linear-gradient(to bottom, #000010, #20202f);
-      font-family: 'Mountains of Christmas', cursive, sans-serif;
-      color: #fff;
-      text-align: center;
     }
-    /* Snow Particles Container */
+
+    /* The background snow container */
     #particles-js {
       position: fixed;
       top: 0;
@@ -45,6 +41,14 @@
       height: 100%;
       z-index: -1;
       pointer-events: none;
+    }
+
+    body {
+      font-family: 'Mountains of Christmas', cursive, sans-serif;
+      font-size: 20px;
+      background: linear-gradient(to bottom, #000010, #20202f);
+      color: #fff;
+      text-align: center;
     }
 
     /************************************************************
