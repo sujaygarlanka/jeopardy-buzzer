@@ -16,78 +16,43 @@
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
   <style>
-    /* 
-      -----------------------------------------------
-      Define our Christmas Red as a CSS Variable
-      -----------------------------------------------
-    */
     :root {
       --deep-christmas-red: rgba(178, 34, 34, 0.9);
     }
 
-    /* 
-      -----------------------------------------------
-      Ensure html and body take up the full viewport
-      and hide horizontal overflow.
-      -----------------------------------------------
-    */
     html,
     body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow-x: hidden; 
-      overflow-y: hidden;
-      /* Uncomment below if you want to disable all vertical scrolling:
+      overflow-x: hidden;
       overflow-y: hidden; 
-      */
     }
 
-    /* 
-      -----------------------------------------------
-      Particles Container
-      -----------------------------------------------
-      Keep the container fixed to fill the entire screen.
-    */
     #particles-js {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1; /* Ensures particles are behind the content */
-      pointer-events: none; /* Don't allow interactions with the particle layer */
+      z-index: -1;
+      pointer-events: none;
     }
 
-    /* 
-      -----------------------------------------------
-      General Body and Font 
-      -----------------------------------------------
-    */
     body {
       font-family: 'Mountains of Christmas', cursive, sans-serif;
       font-size: 20px;
-      /*
-        A darker gradient at the top (#000010) transitioning
-        to a slightly lighter but still dark bottom (#20202f).
-      */
       background: linear-gradient(to bottom, #000010, #20202f);
       color: #fff;
       text-align: center;
     }
 
-    /* 
-      -----------------------------------------------
-      Top Bar and Team Scores
-      -----------------------------------------------
-    */
     #top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 15px 25px;
-      /* Use our variable for the top bar background */
       background-color: var(--deep-christmas-red);
       color: #fff;
       font-weight: bold;
@@ -124,7 +89,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background-color: #2F4F4F; /* Dark slate gray for default buzzer */
+      background-color: #2F4F4F; 
       color: white;
       border: none;
       cursor: pointer;
@@ -161,7 +126,7 @@
     }
 
     .square-button:hover {
-      background-color: #228B22; /* Darker green on hover */
+      background-color: #228B22;
     }
 
     #bell {
@@ -175,6 +140,7 @@
     */
     #jeopardy-board {
       display: grid;
+      /* We assume 5 categories, so 5 columns total */
       grid-template-columns: repeat(5, 1fr);
       gap: 5px;
       width: 80%;
@@ -182,7 +148,7 @@
     }
 
     .category, .question {
-      background-color: #228B22; /* Default green */
+      background-color: #228B22; 
       border: 2px solid #006400; 
       padding: 12% 0;
       font-size: 22px; 
@@ -192,7 +158,7 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
 
-    /* Replace the category color with our variable for red */
+    /* Replace the category color with our red variable */
     .category {
       background-color: var(--deep-christmas-red);
     }
@@ -209,17 +175,12 @@
       pointer-events: none;
     }
 
-    /*
-      -----------------------------------------------
-      Question Box
-      -----------------------------------------------
-    */
     #question-box {
       visibility: hidden; 
       width: 800px;
       height: 420px;
       margin: 20px auto;
-      background-color: #228B22; /* Dark green overlay */
+      background-color: #228B22; 
       color: #fff;
       display: flex;
       justify-content: center;
@@ -231,8 +192,8 @@
       flex-direction: column;
       box-shadow: 0 0 15px rgba(0,0,0,0.7);
       border-radius: 10px;
-      position: relative; /* so it appears over the particles */
-      z-index: 2; /* ensure question box is above the particle layer */
+      position: relative; 
+      z-index: 2;
     }
 
     #question-text {
@@ -245,7 +206,6 @@
       gap: 20px;
     }
 
-    /* Replace these button backgrounds with our variable for red */
     button {
       padding: 12px 28px;
       font-size: 20px;
@@ -259,7 +219,7 @@
 
     button:hover {
       background-color: var(--deep-christmas-red);
-      opacity: 0.8; /* Slight opacity for a hover effect */
+      opacity: 0.8;
     }
 
     #show-answer-button.hidden {
@@ -317,20 +277,17 @@
   </div>
 
   <!-- Jeopardy Board -->
-  <div id="jeopardy-board">
-    <!-- Categories -->
-    <div class="category">Category 1</div>
-    <div class="category">Category 2</div>
-    <div class="category">Category 3</div>
-    <div class="category">Category 4</div>
-    <div class="category">Category 5</div>
-  </div>
+  <!-- 
+       REMOVED the static Category 1, 2, 3, 4, 5 
+       Instead, we dynamically insert them in loadBoard() below
+  -->
+  <div id="jeopardy-board"></div>
 
   <!-- Question Box -->
   <div id="question-box">
     <div id="question-text"></div>
     <div id="button-container">
-      <button id="back-button" onclick="reset()">Back to Board</button>
+      <button id="back-button" onclick="showBoard()">Back to Board</button>
       <button id="show-answer-button">Show Answer</button>
     </div>
     <div id="action-buttons" style="margin-top: 20px; display: flex; gap: 10px;">
@@ -340,7 +297,7 @@
 
   <script>
     //////////////////////////////////////////////////////
-    // Board Code
+    // Board + Category Code
     //////////////////////////////////////////////////////
     const url = 'https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/data.json'; 
     let data;
@@ -362,6 +319,39 @@
         data = val;
         loadBoard();
       });
+
+    function loadBoard() {
+      const board = document.getElementById("jeopardy-board");
+      board.innerHTML = "";
+
+      // 1) Insert category headers from data.categories
+      data.categories.forEach((cat) => {
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "category";
+        categoryDiv.textContent = cat;
+        board.appendChild(categoryDiv);
+      });
+
+      // 2) Insert questions from data.questions
+      data.questions.forEach((question, index) => {
+        const questionDiv = document.createElement("div");
+        questionDiv.className = "question";
+        questionDiv.textContent = `$${question.value}`;
+
+        // If this question was already clicked in a previous session, mark it
+        if (clickedButtons.has(index)) {
+          questionDiv.classList.add("clicked");
+        }
+
+        // Click event
+        questionDiv.onclick = () => {
+          if (!clickedButtons.has(index)) {
+            handleClick(index);
+          }
+        };
+        board.appendChild(questionDiv);
+      });
+    }
 
     function handleClick(index) {
       currentQuestionIndex = index; 
@@ -413,24 +403,6 @@
       teamScores[team - 1] += value;
       document.getElementById(`team${team}-score`).textContent = teamScores[team - 1];
       localStorage.setItem("teamScores", JSON.stringify(teamScores));
-    }
-
-    function loadBoard() {
-      const container = document.getElementById("jeopardy-board");
-      data.questions.forEach((question, index) => {
-        const questionDiv = document.createElement("div");
-        questionDiv.className = "question";
-        questionDiv.textContent = `$${question.value}`;
-        if (clickedButtons.has(index)) {
-          questionDiv.classList.add("clicked");
-        }
-        questionDiv.onclick = () => {
-          if (!clickedButtons.has(index)) {
-            handleClick(index);
-          }
-        };
-        container.appendChild(questionDiv);
-      });
     }
 
     //////////////////////////////////////////////////////
@@ -555,7 +527,6 @@
         } else if (bellRung && buzzerPressed) {
           setLabel(2, "Loser!", "#FFD700");
         } else {
-          teamsEnabled[1] = false;
           setLabel(2, "Disabled", "#FFD700");
         }
         teamsEnabled[1] = false;
@@ -581,62 +552,30 @@
 
   <!-- Initialize Particles.js -->
   <script>
-    // Simple config for "snow" falling
     particlesJS('particles-js', {
       particles: {
-        number: {
-          value: 80,           // How many snowflakes
-          density: {
-            enable: true,
-            value_area: 800
-          }
-        },
-        color: {
-          value: '#ffffff'     // Snow is white
-        },
-        shape: {
-          type: 'circle'       // Basic circles
-        },
-        opacity: {
-          value: 0.8,
-          random: false,
-          anim: {
-            enable: false
-          }
-        },
-        size: {
-          value: 5,            // Flake size
-          random: true,        // Randomly sized
-          anim: {
-            enable: false
-          }
-        },
-        line_linked: {
-          enable: false        // No connecting lines
-        },
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#ffffff' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.8, anim: { enable: false } },
+        size: { value: 5, random: true, anim: { enable: false } },
+        line_linked: { enable: false },
         move: {
           enable: true,
-          speed: 2,            // Fall speed
-          direction: 'bottom', // Snow falls down
+          speed: 2,
+          direction: 'bottom',
           random: false,
           straight: false,
-          out_mode: 'out',     // Flakes disappear out of screen
-          bounce: false,
-          attract: {
-            enable: false
-          }
+          out_mode: 'out',
+          bounce: false
         }
       },
       interactivity: {
         detect_on: 'canvas',
         events: {
-          onhover: {
-            enable: false       // Hover interaction off (optional)
-          },
-          onclick: {
-            enable: false
-          },
-          resize: true          // Recalculate on window resize
+          onhover: { enable: false },
+          onclick: { enable: false },
+          resize: true
         },
         modes: {}
       },
