@@ -20,8 +20,10 @@
       --deep-christmas-red: rgba(178, 34, 34, 0.9);
     }
 
-    /* Make sure html and body occupy the full screen */
-    html, body {
+    /************************************************************
+     * Body + Particles
+     ************************************************************/
+     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
@@ -49,11 +51,9 @@
       text-align: center;
     }
 
-    /* 
-      ==========================================================
-      Top Bar, Team Scores, Buttons
-      ==========================================================
-    */
+    /************************************************************
+     * Top Bar
+     ************************************************************/
     #top-bar {
       display: flex;
       align-items: center;
@@ -64,33 +64,28 @@
       font-weight: bold;
       font-size: 22px;
     }
-
     .team-group {
       display: flex;
       align-items: center;
       gap: 15px;
     }
-
     #team-1, #team-2 {
       display: flex;
       flex-direction: column;
       align-items: center;
       font-size: 20px;
     }
-
     .score {
       font-size: 30px;
       margin: 5px 0;
       color: #FFD700; 
     }
-
     .button-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
     }
-
     .round-button {
       width: 60px;
       height: 60px;
@@ -104,23 +99,19 @@
       align-items: center;
       justify-content: center;
     }
-
     .round-button:hover {
       background-color: #3a5f5f;
     }
-
     .label {
       font-size: 20px;
-      color: #fff;
       margin-top: 5px;
+      color: #fff;
     }
-
     #middle-buttons {
       display: flex;
       align-items: center;
       gap: 15px;
     }
-
     .square-button {
       padding: 12px 28px;  
       border-radius: 5px;
@@ -130,28 +121,24 @@
       cursor: pointer;
       font-size: 20px;
     }
-
     .square-button:hover {
       background-color: #228B22; 
     }
-
     #bell {
       background-color: #2F4F4F;
     }
 
-    /* 
-      ==========================================================
-      Jeopardy Board
-      ==========================================================
-    */
+    /************************************************************
+     * Jeopardy Board
+     * In normal flow, centered horizontally
+     ************************************************************/
     #jeopardy-board {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 5px;
       width: 80%;
-      margin: 20px auto;
+      margin: 20px auto;  /* center horizontally */
     }
-
     .category, .question {
       background-color: #228B22; 
       border: 2px solid #006400; 
@@ -162,16 +149,13 @@
       cursor: pointer;
       box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
-
     .category {
       background-color: var(--deep-christmas-red);
     }
-
     .question:hover {
       background-color: #FFD700;
       color: #000;
     }
-
     .question.clicked {
       background-color: #FFD700; 
       color: #000;
@@ -179,19 +163,19 @@
       pointer-events: none;
     }
 
-    /* 
-      ==========================================================
-      Question Box
-      ==========================================================
-    */
+    /************************************************************
+     * Question Box (fixed overlay, centered)
+     ************************************************************/
     #question-box {
-      visibility: hidden; 
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none; 
       width: 800px;
       height: 420px;
-      margin: 20px auto;
       background-color: #228B22; 
       color: #fff;
-      display: flex;
       justify-content: center;
       align-items: center;
       border: 2px solid #006400;
@@ -201,20 +185,16 @@
       flex-direction: column;
       box-shadow: 0 0 15px rgba(0,0,0,0.7);
       border-radius: 10px;
-      position: relative;
-      z-index: 2;
+      z-index: 2; /* above the board */
     }
-
     #question-text {
       padding: 20px;
     }
-
     #button-container {
       margin-top: 20px;
       display: flex;
       gap: 20px;
     }
-
     button {
       padding: 12px 28px;
       font-size: 20px;
@@ -225,32 +205,25 @@
       font-weight: bold;
       border-radius: 5px;
     }
-
     button:hover {
       background-color: var(--deep-christmas-red);
       opacity: 0.8;
     }
-
     #show-answer-button.hidden {
       display: none;
     }
-
     .red-button {
       background-color: var(--deep-christmas-red);
       color: white;
     }
-
     .red-button:hover {
       background-color: var(--deep-christmas-red);
       opacity: 0.8;
     }
 
-    /*
-      ==========================================================
-      Santa with Banner (Right -> Left)
-      forcibly reset & measure approach
-      ==========================================================
-    */
+    /************************************************************
+     * Santa with Banner
+     ************************************************************/
     #santa {
       position: fixed;
       bottom: -25px;
@@ -258,19 +231,15 @@
       display: flex;
       align-items: center;
       z-index: 3; /* Over the background/particles */
-
-      /* We'll manipulate these transitions in JS to reset or animate */
       transition-property: left;
       transition-timing-function: linear;
       transition-duration: 0s; 
     }
-
     #santa-img {
       width: 150px;
       height: auto;
       display: block;
     }
-
     #banner {
       margin-left: 20px;      
       background-color: gold;
@@ -280,6 +249,42 @@
       border-radius: 8px;
       font-size: 24px;
       white-space: nowrap;
+    }
+
+    /************************************************************
+     * Final Jeopardy (Fixed overlay, centered)
+     ************************************************************/
+    #final-jeopardy-trigger-container {
+      display: none;
+      margin-top: 20px;
+    }
+    #final-jeopardy-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      width: 800px;
+      height: 420px;
+      z-index: 2; /* on top of board */
+    }
+    .final-box {
+      width: 100%;
+      height: 100%;
+      background-color: #228B22; 
+      color: #fff;
+      display: none; /* toggled in JS */
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #006400;
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      flex-direction: column;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      border-radius: 10px;
+      position: relative;
+      z-index: 3;
     }
   </style>
 </head>
@@ -331,10 +336,10 @@
       </div>
   </div>
 
-  <!-- Jeopardy Board -->
+  <!-- Jeopardy Board in normal flow -->
   <div id="jeopardy-board"></div>
 
-  <!-- Question Box -->
+  <!-- Question Box (fixed overlay) -->
   <div id="question-box">
     <div id="question-text"></div>
     <div id="button-container">
@@ -343,6 +348,29 @@
     </div>
     <div id="action-buttons" style="margin-top: 20px; display: flex; gap: 10px;">
       <button class="red-button" onclick="handleIncorrect()">Incorrect</button>
+    </div>
+  </div>
+
+  <!-- Final Jeopardy Trigger (hidden until last Q) -->
+  <div id="final-jeopardy-trigger-container">
+    <button id="final-jeopardy-button" class="square-button">Final Jeopardy</button>
+  </div>
+
+  <!-- Final Jeopardy Container (fixed overlay) -->
+  <div id="final-jeopardy-container">
+    <!-- Final Jeopardy Question -->
+    <div id="final-question-box" class="final-box">
+      <div id="final-question-text"></div>
+      <div style="margin-top: 20px;">
+        <button id="final-show-answer-button" class="red-button">Show Answer</button>
+      </div>
+    </div>
+    <!-- Final Jeopardy Answer -->
+    <div id="final-answer-box" class="final-box">
+      <div id="final-answer-text"></div>
+      <div style="margin-top: 20px;">
+        <button id="end-game-button" class="red-button">End Game</button>
+      </div>
     </div>
   </div>
 
@@ -407,11 +435,13 @@
       currentQuestionIndex = index; 
       showAnswerClicked = false;
 
+      // Hide the board
       document.getElementById("jeopardy-board").style.display = "none";
+
+      // Show the question box (overlay)
       const questionBox = document.getElementById("question-box");
-      const questionText = document.getElementById("question-text");
-      questionText.textContent = data.questions[index].question;
-      questionBox.style.visibility = "visible";
+      questionBox.style.display = "flex";
+      document.getElementById("question-text").textContent = data.questions[index].question;
       document.getElementById("show-answer-button").classList.remove("hidden");
     }
 
@@ -422,8 +452,18 @@
         clickedButtons.add(currentQuestionIndex);
         localStorage.setItem('clickedButtons', JSON.stringify(Array.from(clickedButtons)));
       }
+
+      // Hide question box overlay
+      document.getElementById("question-box").style.display = "none";
+
+      // Check if all questions are clicked
+      if (clickedButtons.size === data.questions.length) {
+        triggerFinalJeopardy();
+        return;
+      }
+
+      // Otherwise, show board again
       document.getElementById("jeopardy-board").style.display = "grid";
-      document.getElementById("question-box").style.visibility = "hidden";
     }
 
     function showAnswer() {
@@ -438,25 +478,67 @@
       }
     }
 
-    function handleIncorrect() {
-      if (currentQuestionIndex === null) return;
-      let value = data.questions[currentQuestionIndex].value;
-      if (teamBuzzed) {
-        updateScore(teamBuzzed, -value);
-        incorrectReset(teamBuzzed);
-      }
-      incorrectAudio.play();
+    //////////////////////////////////////////////////////
+    // 2) Final Jeopardy
+    //////////////////////////////////////////////////////
+    function triggerFinalJeopardy() {
+      // Hide the board & question box if open
+      document.getElementById("jeopardy-board").style.display = "none";
+      document.getElementById("question-box").style.display = "none";
+
+      // Show final jeopardy trigger (in normal flow)
+      document.getElementById("final-jeopardy-trigger-container").style.display = "block";
     }
 
-    function updateScore(team, value) {
-      teamScores[team - 1] += value;
-      document.getElementById(`team${team}-score`).textContent = teamScores[team - 1];
-      localStorage.setItem("teamScores", JSON.stringify(teamScores));
-    }
+    // When user clicks "Final Jeopardy" button
+    document.getElementById("final-jeopardy-button").addEventListener("click", () => {
+      // Hide the trigger button
+      document.getElementById("final-jeopardy-trigger-container").style.display = "none";
 
+      // Show the final jeopardy container (fixed overlay)
+      const fjContainer = document.getElementById("final-jeopardy-container");
+      fjContainer.style.display = "block";
+
+      // Show the question box, hide the answer box
+      document.getElementById("final-question-box").style.display = "flex";
+      document.getElementById("final-answer-box").style.display = "none";
+
+      // Populate final question
+      document.getElementById("final-question-text").textContent = data.final_jeopardy.question;
+    });
+
+    // Show final answer
+    document.getElementById("final-show-answer-button").addEventListener("click", () => {
+      // Hide question, show answer
+      document.getElementById("final-question-box").style.display = "none";
+      document.getElementById("final-answer-box").style.display = "flex";
+
+      // Populate final answer
+      document.getElementById("final-answer-text").textContent = data.final_jeopardy.answer;
+    });
+
+    // End game: clear localStorage, reset state, show fresh board
+    document.getElementById("end-game-button").addEventListener("click", () => {
+      // 1. Clear localStorage
+      localStorage.clear();
+
+      // 2. Clear our in-memory sets
+      clickedButtons.clear();
+      showAnswerClicked = false;
+      teamScores = [0, 0];
+      document.getElementById("team1-score").textContent = 0;
+      document.getElementById("team2-score").textContent = 0;
+
+      // 3. Hide final jeopardy overlay
+      document.getElementById("final-jeopardy-container").style.display = "none";
+
+      // 4. Reload board and show it
+      loadBoard();
+      document.getElementById("jeopardy-board").style.display = "grid";
+    });
 
     //////////////////////////////////////////////////////
-    // 2) Buzzer + Team Code
+    // 3) Buzzer + Team Code
     //////////////////////////////////////////////////////
     const bellAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/bell.mp3');
     const buzzerAudio = new Audio('https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/buzzer.mp3');
@@ -490,6 +572,22 @@
       clearInterval(countDownInterval);
       setLabel(1, "Enabled", "white");
       setLabel(2, "Enabled", "white");
+    }
+
+    function handleIncorrect() {
+      if (currentQuestionIndex === null) return;
+      let value = data.questions[currentQuestionIndex].value;
+      if (teamBuzzed) {
+        updateScore(teamBuzzed, -value);
+        incorrectReset(teamBuzzed);
+      }
+      incorrectAudio.play();
+    }
+
+    function updateScore(team, value) {
+      teamScores[team - 1] += value;
+      document.getElementById(`team${team}-score`).textContent = teamScores[team - 1];
+      localStorage.setItem("teamScores", JSON.stringify(teamScores));
     }
 
     function incorrectReset(team) {
@@ -591,7 +689,6 @@
         setCircleColor(2, "#FFD700");
       }
     });
-
     window.addEventListener('keyup', function(event) {
       if (event.key === 'a' && teamBuzzed !== 1) {
         setCircleColor(1, "#2F4F4F");
@@ -601,7 +698,7 @@
     });
 
     //////////////////////////////////////////////////////////
-    // 3) Logic for Santa Banner with Quotes *and* Jokes
+    // 4) Santa Banner with Quotes & Jokes
     //////////////////////////////////////////////////////////
     let quotes = [];
     let jokes = [];
@@ -611,10 +708,9 @@
     const santa  = document.getElementById("santa");
     const banner = document.getElementById("banner");
 
-    // We'll load jokes from jokes.json AND quotes from quotes.json
     const jokesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/jokes.json";
     const quotesUrl = "https://raw.githubusercontent.com/sujaygarlanka/jeopardy-buzzer/refs/heads/main/quotes.json";
-    // Step 1: Load jokes
+
     fetch(jokesUrl)
       .then((response) => {
         if (!response.ok) {
@@ -623,11 +719,7 @@
         return response.json();
       })
       .then((jokesData) => {
-        // jokesData is an array of objects like:
-        // [ { "id": "...", "joke": "..." }, ... ]
         jokes = jokesData || [];
-        console.log("Loaded jokes: ", jokes.length);
-        // Step 2: Load quotes
         return fetch(quotesUrl);
       })
       .then((resp) => {
@@ -637,45 +729,32 @@
         return resp.json();
       })
       .then((quotesData) => {
-        // quotesData = { "quotes": ["q1", "q2"] } 
         quotes = quotesData.quotes || [];
-        console.log("Loaded quotes: ", quotes.length);
-        // Start after jokes & quotes load
         startSantaRun();
       })
       .catch((err) => {
         console.error("Error loading jokes/quotes:", err);
         banner.textContent = "Merry Christmas!";
-        // Start anyway
         startSantaRun();
       });
 
-    // 85% chance we pick a joke, 15% chance we pick a quote
-    // If the chosen set is empty, fallback to the other set
     function getRandomText() {
       if (!jokes.length && !quotes.length) {
-        // No data at all, fallback
         return "Merry Christmas!";
       }
-
-      // 85% => jokes, 15% => quotes
-      const chance = Math.random() * 100; // [0..100)
+      const chance = Math.random() * 100;
       const pickJoke = (chance < 85);
-
       if (pickJoke && jokes.length) {
         return getRandomJoke();
       } else if (!pickJoke && quotes.length) {
         return getRandomQuote();
       }
-
-      // fallback if the chosen set is empty
       if (jokes.length) return getRandomJoke();
       if (quotes.length) return getRandomQuote();
       return "Merry Christmas!";
     }
 
     function getRandomQuote() {
-      // Example: "quotes" is an array of strings
       if (!quotes.length) return "Merry Christmas!";
       if (usedIndicesQuotes.size === quotes.length) {
         usedIndicesQuotes.clear();
@@ -689,7 +768,6 @@
     }
 
     function getRandomJoke() {
-      // "jokes" is an array of objects: { "id": "..", "joke": ".." }
       if (!jokes.length) return "Merry Christmas!";
       if (usedIndicesJokes.size === jokes.length) {
         usedIndicesJokes.clear();
@@ -699,39 +777,31 @@
         idx = Math.floor(Math.random() * jokes.length);
       }
       usedIndicesJokes.add(idx);
-      return jokes[idx].joke; // Return just the "joke" text
+      return jokes[idx].joke;
     }
 
-    // The main function that sets Santa's position & text
     function startSantaRun() {
-      // A) Reset transition to 0s so Santa can jump instantly to right edge
       santa.style.transitionDuration = "0s";
       santa.style.left = "120%";
       santa.getBoundingClientRect(); // force reflow
 
-      // B) Set the text (85% jokes, 15% quotes)
       banner.textContent = getRandomText();
 
-      // C) Measure container width
       const containerWidth = santa.offsetWidth;
-
-      // D) Decide speed & duration
       const totalDistance = window.innerWidth + containerWidth + 60;
-      const speedPxPerSec = 150;  // adjust speed
+      const speedPxPerSec = 150;
       const durationSeconds = totalDistance / speedPxPerSec;
       santa.style.transitionDuration = `${durationSeconds}s`;
 
-      // E) Move fully off the left
       santa.style.left = `-${containerWidth}px`;
     }
 
-    // Once done crossing, repeat with new text
     santa.addEventListener("transitionend", () => {
       startSantaRun();
     });
   </script>
 
-  <!-- Initialize Particles.js -->
+  <!-- Initialize Particles.js (Snow) -->
   <script>
     particlesJS('particles-js', {
       particles: {
