@@ -209,6 +209,9 @@
       background-color: var(--deep-christmas-red);
       opacity: 0.8;
     }
+    #incorrect-button.hidden {
+      display: none;
+    }    
     #show-answer-button.hidden {
       display: none;
     }
@@ -347,7 +350,7 @@
       <button id="show-answer-button">Show Answer</button>
     </div>
     <div id="action-buttons" style="margin-top: 20px; display: flex; gap: 10px;">
-      <button class="red-button" onclick="handleIncorrect()">Incorrect</button>
+      <button id="incorrect-button" class="red-button" onclick="handleIncorrect()">Incorrect</button>
     </div>
   </div>
 
@@ -443,6 +446,7 @@
       questionBox.style.display = "flex";
       document.getElementById("question-text").textContent = data.questions[index].question;
       document.getElementById("show-answer-button").classList.remove("hidden");
+      document.getElementById("incorrect-button").classList.remove("hidden");
     }
 
     function showBoard() {
@@ -475,6 +479,7 @@
         if (teamBuzzed) {
           updateScore(teamBuzzed, data.questions[currentQuestionIndex].value);
         }
+        document.getElementById("incorrect-button").classList.add("hidden");
         document.getElementById("show-answer-button").classList.add("hidden");
       }
     }
