@@ -440,6 +440,7 @@
     function handleClick(index) {
       currentQuestionIndex = index; 
       showAnswerClicked = false;
+      teamsEnabled = [true, true];
 
       // Hide the board
       document.getElementById("jeopardy-board").style.display = "none";
@@ -577,7 +578,7 @@
 
     function resetBuzzer() {
       clearBell();
-      teamsEnabled = [true, true];
+      teamsEnabled = [false, false];
       buzzerPressed = false;
       teamBuzzed = null;
       teamsBuzzedSoFar = [];
