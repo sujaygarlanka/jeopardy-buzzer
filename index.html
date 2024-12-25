@@ -477,6 +477,7 @@
 
     function showAnswer() {
       if (currentQuestionIndex !== null) {
+        teamsEnabled = [false, false];
         const questionText = document.getElementById("question-text");
         questionText.textContent = `Answer: ${data.questions[currentQuestionIndex].answer}`;
         showAnswerClicked = true; 
