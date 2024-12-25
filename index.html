@@ -619,7 +619,7 @@
           setIsTeamEnabled(teamIndex, false)
         } else {
           setIsTeamEnabled(teamIndex, true);
-          setLabel(teamIndex, "Feeling lucky?", "white");
+          setLabel(teamIndex, "Enabled... Feeling lucky?");
         }
       });
       teamBuzzed = null;
@@ -681,7 +681,7 @@
     function startCountdown(team) {
       let otherTeam = (team % 2) + 1;
       setIsTeamEnabled(otherTeam, false);
-      setLabel(otherTeam, "Too Slow!", "#FFD700");
+      setLabel(otherTeam, "Disabled... Too Slow!");
       let secondsLeft = timerLength;
       countDownInterval = setInterval(() => {
         secondsLeft -= 1;
@@ -700,6 +700,7 @@
         if (!bellRung)
         {
             setIsTeamEnabled(1, false);
+            setLabel(1, "Disabled... Someone's got an itchy buzzer finger!")
         }
         else if (!teamBuzzed) {
           setIsTeamEnabled(1, false);
@@ -713,6 +714,7 @@
         if (!bellRung)
         {
             setIsTeamEnabled(2, false);
+            setLabel(2, "Disabled... Please respect the bell.")
         }
         else if (!teamBuzzed) {
           setIsTeamEnabled(2, false)
