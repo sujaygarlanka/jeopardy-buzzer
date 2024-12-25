@@ -674,7 +674,7 @@
       // Team 1
       if (event.key === 'a' && teamsEnabled[0]) {
         if (bellRung && !buzzerPressed) {
-          setLabel(1, "Winner!", "#FFD700");
+          setLabel(1, "Winner!", "green");
           startCountdown(1);
           buzzerPressed = true;
           teamBuzzed = 1;
