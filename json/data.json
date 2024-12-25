@@ -9,128 +9,128 @@
     "questions": [
         {
             "value": 100,
-            "answer": "This country’s leader declared martial law for all of 6 hours before its parliament unanimously voted to lift the order",
-            "question": "What is South Korea??"
+            "question": "This country’s leader declared martial law for all of 6 hours before its parliament unanimously voted to lift the order",
+            "answer": "What is South Korea?"
         },
         {
             "value": 100,
-            "answer": "Immigrants from this country were accused of “eating the dogs”  in Springfield, Missouri during the presidential debate",
-            "question": "What is Haiti?"
+            "question": "Immigrants from this country were accused of “eating the dogs”  in Springfield, Missouri during the presidential debate",
+            "answer": "What is Haiti?"
         },
         {
             "value": 100,
-            "answer": "This song must be That Sweet (I guess so), taking Spotify’s number 1 spot for most streamed track around the globe",
-            "question": "What is 'Espresso' by Sabrina Carpenter?"
+            "question": "This song must be That Sweet (I guess so), taking Spotify’s number 1 spot for most streamed track around the globe",
+            "answer": "What is 'Espresso' by Sabrina Carpenter?"
         },
         {
             "value": 100,
-            "answer": "This man won player of the tournament in the 2024 T20 cricket world cup for leading his team to victory",
-            "question": "Who is Jasprit Bumrah?"
+            "question": "This man won player of the tournament in the 2024 T20 cricket world cup for leading his team to victory",
+            "answer": "Who is Jasprit Bumrah?"
         },
-          {
+        {
             "value": 100,
-            "answer": "On April 8, parts of North America went Totally dark due to this event, which one firm estimated would cost almost $700 million in lost productivity",
-            "question": "What is a solar eclipse??"
+            "question": "On April 8, parts of North America went Totally dark due to this event, which one firm estimated would cost almost $700 million in lost productivity",
+            "answer": "What is a solar eclipse?"
         },
         {
             "value": 200,
-            "answer": "Hundreds of these devices were detonated by the Israel’s Mossad in Lebanon, injuring several thousand.",
-            "question": "What are pagers?"
+            "question": "Hundreds of these devices were detonated by the Israel’s Mossad in Lebanon, injuring several thousand.",
+            "answer": "What are pagers?"
         },
         {
             "value": 200,
-            "answer": "An Air Force service member did this outside the Israeli embassy in February  to protest Israel’s genocide in Gaza",
-            "question": "What is self-immolation?"
+            "question": "An Air Force service member did this outside the Israeli embassy in February  to protest Israel’s genocide in Gaza",
+            "answer": "What is self-immolation?"
         },
         {
             "value": 200,
-            "answer": "After a 9 year hiatus, he returned his former job to cover the 2024 election, although this time around it’s been more of a Weekly outing rather than a Daily one",
-            "question": "Who is Jon Stewart?"
+            "question": "After a 9 year hiatus, he returned his former job to cover the 2024 election, although this time around it’s been more of a Weekly outing rather than a Daily one",
+            "answer": "Who is Jon Stewart?"
         },
         {
             "value": 200,
-            "answer": "This player was cleared of wrongdoing after failing two drug tests by claiming that trace amounts of an anabolic steroid entered his bloodstream after a physiotherapist used it to treat an open wound on his finger and then massaged lesions on the players bodies",
-            "question": "Who is Jannick Sinner?"
+            "question": "This player was cleared of wrongdoing after failing two drug tests by claiming that trace amounts of an anabolic steroid entered his bloodstream after a physiotherapist used it to treat an open wound on his finger and then massaged lesions on the players bodies",
+            "answer": "Who is Jannick Sinner?"
         },
         {
             "value": 200,
-            "answer": "On May 4, this song was released; it would decisively end the highly public feud between two of the most prominent rappers in the industry and igo on to be the most popular rap song of 2024",
-            "question": "What is 'Not Like Us' by Kendrick Lamar?"
+            "question": "On May 4, this song was released; it would decisively end the highly public feud between two of the most prominent rappers in the industry and igo on to be the most popular rap song of 2024",
+            "answer": "What is 'Not Like Us' by Kendrick Lamar?"
         },
         {
             "value": 300,
-            "answer": "Soldiers from this country were reportedly overwhelmed with access to an unrestricted internet for the first time after being deployed in the Ukraine war",
-            "question": "What is North Korea?"
-        },
-       {
-            "value": 300,
-            "answer": "Between criminal charges, two stranded astronauts, and an exploding satellite, it hasn’t exactly been a stellar year for this company",
-            "question": "What is Boeing?"
+            "question": "Soldiers from this country were reportedly overwhelmed with access to an unrestricted internet for the first time after being deployed in the Ukraine war",
+            "answer": "What is North Korea?"
         },
         {
             "value": 300,
-            "answer": "'Like many amateur photographers', this person said while apologizing for sharing doctored photos, they 'experiment with editing.'",
-            "question": "Who is Kate Middleton?"
+            "question": "Between criminal charges, two stranded astronauts, and an exploding satellite, it hasn’t exactly been a stellar year for this company",
+            "answer": "What is Boeing?"
         },
         {
             "value": 300,
-            "answer": "The most watched college basketball game on record is 2024’s NCAA basketball championship, won by this team, with 18.7 million viewers",
-            "question": "Who are the South Carolina Gamecocks?"
+            "question": "'Like many amateur photographers', this person said while apologizing for sharing doctored photos, they 'experiment with editing.'",
+            "answer": "Who is Kate Middleton?"
         },
         {
             "value": 300,
-            "answer": "On July 19, a botched software update by this company crashed Windows PCs and servers around the glob",
-            "question": "What is CrowdStrike?"
+            "question": "The most watched college basketball game on record is 2024’s NCAA basketball championship, won by this team, with 18.7 million viewers",
+            "answer": "Who are the South Carolina Gamecocks?"
+        },
+        {
+            "value": 300,
+            "question": "On July 19, a botched software update by this company crashed Windows PCs and servers around the glob",
+            "answer": "What is CrowdStrike?"
         },
         {
             "value": 400,
-            "answer": "Student protests over quotas for government jobs escalated into a mass uprising, ousting this South Asian leader",
-            "question": "Who is Sheik Hasina?"
+            "question": "Student protests over quotas for government jobs escalated into a mass uprising, ousting this South Asian leader",
+            "answer": "Who is Sheik Hasina?"
         },
         {
             "value": 400,
-            "answer": "After spending the last 5 years in a British prison, this person was allowed to return to his home country of Australia after undergoing trial in the US pacific islands and pleading guilty to a felony charge of conspiracy to obtain and disclose national defense information",
-            "question": "Who is Julian Assange?"
+            "question": "After spending the last 5 years in a British prison, this person was allowed to return to his home country of Australia after undergoing trial in the US pacific islands and pleading guilty to a felony charge of conspiracy to obtain and disclose national defense information",
+            "answer": "Who is Julian Assange?"
         },
         {
             "value": 400,
-            "answer": "Synthetic voice Sky was removed from ChatGPT for sounding remarkably similar to this actor’s voice, despite their multiple previous refusals to lend their voice to Open AI",
-            "question": "Who is Scarlett Johansson?"
+            "question": "Synthetic voice Sky was removed from ChatGPT for sounding remarkably similar to this actor’s voice, despite their multiple previous refusals to lend their voice to Open AI",
+            "answer": "Who is Scarlett Johansson?"
         },
         {
             "value": 400,
-            "answer": "This athlete finished with the most individual medals in the 2024 summer olympics",
-            "question": "Who is Leon Marchand?"
+            "question": "This athlete finished with the most individual medals in the 2024 summer olympics",
+            "answer": "Who is Leon Marchand?"
         },
         {
             "value": 400,
-            "answer": "On March 26, a bridge in this city collapsed after being hit by a container ship",
-            "question": "What is Baltimore?"
+            "question": "On March 26, a bridge in this city collapsed after being hit by a container ship",
+            "answer": "What is Baltimore?"
         },
         {
             "value": 500,
-            "answer": "This country held the world’s largest single day elections in February, decisively electing a former war general and current defense minister with a questionable human rights record as president",
-            "question": "What is Indonesia?"
+            "question": "This country held the world’s largest single day elections in February, decisively electing a former war general and current defense minister with a questionable human rights record as president",
+            "answer": "What is Indonesia?"
         },
         {
             "value": 500,
-            "answer": "The Department of Justice demanded that Google sell this product after it was found guilty of monopolistic search practices in federal court",
-            "question": "What is Google Chrome?"
+            "question": "The Department of Justice demanded that Google sell this product after it was found guilty of monopolistic search practices in federal court",
+            "answer": "What is Google Chrome?"
         },
         {
             "value": 500,
-            "answer": "Amazon was reportedly working on using Alexa’s voice recognition software to allow audience members to ask questions to the main character of this film before the project was scrapped as part of layoffs",
-            "question": "What is Megalopolis?"
+            "question": "Amazon was reportedly working on using Alexa’s voice recognition software to allow audience members to ask questions to the main character of this film before the project was scrapped as part of layoffs",
+            "answer": "What is Megalopolis?"
         },
         {
             "value": 500,
-            "answer": "This gold medalist named Elon Musk and JK Rowling in a criminal complaint for online harassment",
-            "question": "Who is Imane Khelif?"
+            "question": "This gold medalist named Elon Musk and JK Rowling in a criminal complaint for online harassment",
+            "answer": "Who is Imane Khelif?"
         },
         {
             "value": 500,
-            "answer": "TOn November 20th, Maurizio Catalan’s artwork The Comedian, which primarily consists of this object that was purchased for $0.25 on the street, sold for 6.2 million dollars",
-            "question": "What is a banana?"
+            "question": "On November 20th, Maurizio Catalan’s artwork The Comedian, which primarily consists of this object that was purchased for $0.25 on the street, sold for 6.2 million dollars",
+            "answer": "What is a banana?"
         }
     ],
     "final_jeopardy": {
