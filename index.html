@@ -613,11 +613,13 @@
       teamsThatGotItWrong.push(team);
       
       teamsEnabled.forEach((enabled, index) => {
-        setCircleColor(team, "#2F4F4F");
-        if (teamsThatGotItWrong.includes(index+1)) {
-          setIsTeamEnabled(index + 1, false)
+        let teamIndex = index + 1;  
+        setCircleColor(teamIndex, "#2F4F4F");
+        if (teamsThatGotItWrong.includes(teamIndex)) {
+          setIsTeamEnabled(teamIndex, false)
         } else {
-          setIsTeamEnabled(index + 1, true);
+          setIsTeamEnabled(teamIndex, true);
+          setLabel(teamIndex, "Feeling lucky?", "white");
         }
       });
       teamBuzzed = null;
@@ -679,7 +681,7 @@
     function startCountdown(team) {
       let otherTeam = (team % 2) + 1;
       setIsTeamEnabled(otherTeam, false);
-      setLabel(otherTeam, "Loser!", "#FFD700");
+      setLabel(otherTeam, "Too Slow!", "#FFD700");
       let secondsLeft = timerLength;
       countDownInterval = setInterval(() => {
         secondsLeft -= 1;
