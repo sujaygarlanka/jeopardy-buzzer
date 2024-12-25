@@ -440,7 +440,8 @@
     function handleClick(index) {
       currentQuestionIndex = index; 
       showAnswerClicked = false;
-      teamsEnabled = [true, true];
+      setIsTeamEnabled(1, true);
+      setIsTeamEnabled(2, true);
 
       // Hide the board
       document.getElementById("jeopardy-board").style.display = "none";
@@ -477,11 +478,15 @@
 
     function showAnswer() {
       if (currentQuestionIndex !== null) {
-        teamsEnabled = [false, false];
+        setIsTeamEnabled(1, false);
+        setIsTeamEnabled(2, false);
+        clearInterval(countDownInterval);
         const questionText = document.getElementById("question-text");
         questionText.textContent = `Answer: ${data.questions[currentQuestionIndex].answer}`;
         showAnswerClicked = true; 
         if (teamBuzzed) {
+          setLabel(teamBuzzed, "Correct!", "green");
+          
           updateScore(teamBuzzed, data.questions[currentQuestionIndex].value);
         }
         document.getElementById("incorrect-button").classList.add("hidden");
@@ -558,10 +563,9 @@
     let teamScores = [0, 0];
     let bellRung = false;
     let teamsEnabled = [true, true];
-    let buzzerPressed = false;
     let countDownInterval;
     let teamBuzzed = null;
-    let teamsBuzzedSoFar = [];
+    let teamsThatGotItWrong = [];
     let timerLength = 15;
 
     resetBuzzer();
@@ -579,13 +583,11 @@
 
     function resetBuzzer() {
       clearBell();
-      teamsEnabled = [false, false];
-      buzzerPressed = false;
+      setIsTeamEnabled(1, false);
+      setIsTeamEnabled(2, false);
       teamBuzzed = null;
-      teamsBuzzedSoFar = [];
+      teamsThatGotItWrong = [];
       clearInterval(countDownInterval);
-      setLabel(1, "Enabled", "white");
-      setLabel(2, "Enabled", "white");
       setCircleColor(1, "#2F4F4F");
       setCircleColor(2, "#2F4F4F");
     }
@@ -608,20 +610,16 @@
 
     function incorrectResetBuzzer(team) {
       clearInterval(countDownInterval);
-      teamsBuzzedSoFar.push(team);
+      teamsThatGotItWrong.push(team);
       
       teamsEnabled.forEach((enabled, index) => {
-        if (teamsBuzzedSoFar.includes(index+1)) {
-          setCircleColor(team, "#2F4F4F");
-          setLabel(index+1, "Disabled", "#FFD700");
-          teamsEnabled[index] = false;
+        setCircleColor(team, "#2F4F4F");
+        if (teamsThatGotItWrong.includes(index+1)) {
+          setIsTeamEnabled(index + 1, false)
         } else {
-          setCircleColor(team, "#2F4F4F");
-          setLabel(index+1, "Enabled", "white");
-          teamsEnabled[index] = true;
+          setIsTeamEnabled(index + 1, true);
         }
       });
-      buzzerPressed = false;
       teamBuzzed = null;
     }
 
@@ -659,7 +657,29 @@
       document.getElementById('bell').style.backgroundColor = "#2F4F4F";
     }
 
+    function isTeamEnabled(team)
+    {
+        return teamsEnabled[team - 1];
+    }
+    
+    function setIsTeamEnabled(team, isEnabled)
+    {
+        teamsEnabled[team - 1]  = isEnabled;
+        if (isEnabled)
+        {
+            setLabel(team, "Enabled", "white");
+        }
+        else
+        {
+            setLabel(team, "Disabled", "#FFD700");
+        }
+    }
+
+
     function startCountdown(team) {
+      let otherTeam = (team % 2) + 1;
+      setIsTeamEnabled(otherTeam, false);
+      setLabel(otherTeam, "Loser!", "#FFD700");
       let secondsLeft = timerLength;
       countDownInterval = setInterval(() => {
         secondsLeft -= 1;
@@ -667,42 +687,41 @@
         if (secondsLeft === 0) {
           clearInterval(countDownInterval);
           buzzerAudio.play();
+          setIsTeamEnabled(otherTeam, true)
         }
       }, 1000);   
     }
 
     window.addEventListener('keydown', function(event) {
       // Team 1
-      if (event.key === 'a' && teamsEnabled[0]) {
-        if (bellRung && !buzzerPressed) {
-          setLabel(1, "Winner!", "#FFD700");
-          startCountdown(1);
-          buzzerPressed = true;
-          teamBuzzed = 1;
-        } else if (bellRung && buzzerPressed) {
-          setLabel(1, "Loser!", "#FFD700");
-        } else {
-          setLabel(1, "Disabled", "#FFD700");
+      if (event.key === 'a' && isTeamEnabled(1)) {
+        if (!bellRung)
+        {
+            setIsTeamEnabled(1, false);
         }
-        teamsEnabled[0] = false;
+        else if (!teamBuzzed) {
+          setIsTeamEnabled(1, false);
+          setLabel(1, "Winner!", "green");
+          startCountdown(1);
+          teamBuzzed = 1;
+        } 
       }
       // Team 2
-      else if (event.key === 'l' && teamsEnabled[1]) {
-        if (bellRung && !buzzerPressed) {
+      else if (event.key === 'l' && isTeamEnabled(2)) {
+        if (!bellRung)
+        {
+            setIsTeamEnabled(2, false);
+        }
+        else if (!teamBuzzed) {
+          setIsTeamEnabled(2, false)
           setLabel(2, "Winner!", "green");
           startCountdown(2);
-          buzzerPressed = true;
           teamBuzzed = 2;
-        } else if (bellRung && buzzerPressed) {
-          setLabel(2, "Loser!", "#FFD700");
-        } else {
-          setLabel(2, "Disabled", "#FFD700");
         }
-        teamsEnabled[1] = false;
       }
     });
 
-    // Only reset circle color if the team hasn't actually buzzed
+    // circle color should always be set while button pressed
     window.addEventListener('keydown', function(event) {
       if (event.key === 'a') {
         setCircleColor(1, "#FFD700");
@@ -710,6 +729,8 @@
         setCircleColor(2, "#FFD700");
       }
     });
+
+    // Only reset circle color on release if the team hasn't actually buzzed
     window.addEventListener('keyup', function(event) {
       if (event.key === 'a' && teamBuzzed !== 1) {
         setCircleColor(1, "#2F4F4F");
