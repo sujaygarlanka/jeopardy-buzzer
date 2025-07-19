@@ -8,7 +8,7 @@
   <!-- Holiday-themed font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link 
-    href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" 
     rel="stylesheet"
   />
 
@@ -41,7 +41,7 @@
     }
 
     body {
-      font-family: 'Pacifico', cursive, sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 20px;
       /* Sand background image */
       background: url('media/background.png') center center / cover no-repeat fixed, linear-gradient(to bottom, #F5DEB3, #EED9A1);
@@ -99,6 +99,10 @@
     }
     .round-button:hover {
       background-color: #3a5f5f;
+    }
+    /* Ensure all UI buttons display text in Poppins font */
+    button, .round-button, .square-button {
+      font-family: 'Poppins', sans-serif;
     }
     .label {
       font-size: 20px;
