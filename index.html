@@ -8,16 +8,13 @@
   <!-- Holiday-themed font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link 
-    href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" 
+    href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" 
     rel="stylesheet"
   />
 
-  <!-- Particles.js library (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-
   <style>
     :root {
-      --deep-christmas-red: rgba(178, 34, 34, 0.9);
+      --deep-christmas-red: rgba(0, 123, 255, 0.9); /* Ocean Blue */
     }
 
     /************************************************************
@@ -44,10 +41,11 @@
     }
 
     body {
-      font-family: 'Mountains of Christmas', cursive, sans-serif;
+      font-family: 'Pacifico', cursive, sans-serif;
       font-size: 20px;
-      background: linear-gradient(to bottom, #000010, #20202f);
-      color: #fff;
+      /* Sand background image */
+      background: url('media/background.png') center center / cover no-repeat fixed, linear-gradient(to bottom, #F5DEB3, #EED9A1);
+      color: #333;
       text-align: center;
     }
 
@@ -115,14 +113,14 @@
     .square-button {
       padding: 12px 28px;  
       border-radius: 5px;
-      background-color: #008000; 
+      background-color: #20B2AA; 
       color: white;
       border: none;
       cursor: pointer;
       font-size: 20px;
     }
     .square-button:hover {
-      background-color: #228B22; 
+      background-color: #3CB371; 
     }
     #bell {
       background-color: #2F4F4F;
@@ -143,8 +141,8 @@
       font-size: 30px; 
     }
     .category, .question {
-      background-color: #228B22; 
-      border: 2px solid #006400; 
+      background-color: #20B2AA; /* Sea Green */
+      border: 2px solid #0066CC; /* Ocean border */
       padding: 10% 0;
       font-weight: bold;
       text-transform: uppercase;
@@ -239,7 +237,8 @@
       z-index: 3; /* Over the background/particles */
       transition-property: left;
       transition-timing-function: linear;
-      transition-duration: 0s; 
+      transition-duration: 0s;
+      pointer-events: none; /* Allow clicks to pass through */
     }
     #santa-img {
       width: 150px;
@@ -295,15 +294,12 @@
   </style>
 </head>
 <body>
-  <!-- Snow Particles Container -->
-  <div id="particles-js"></div>
-
   <!-- Santa Container -->
   <div id="santa">
     <img
       id="santa-img"
-      src="https://github.com/sujaygarlanka/jeopardy-buzzer/raw/refs/heads/main/media/santa.gif"
-      alt="Santa with Reindeer"
+      src="media/output2.gif"
+      alt="Surfing Beach Ball"
     />
     <div id="banner">Banner Placeholder</div>
   </div>
@@ -780,13 +776,13 @@
       })
       .catch((err) => {
         console.error("Error loading jokes/quotes:", err);
-        banner.textContent = "Merry Christmas!";
+        banner.textContent = "Sun, Sand, and Trivia!";
         startSantaRun();
       });
 
     function getRandomText() {
       if (!jokes.length && !quotes.length) {
-        return "Merry Christmas!";
+        return "Sun, Sand, and Trivia!";
       }
       const chance = Math.random() * 100;
       const pickJoke = (chance < 85);
@@ -797,11 +793,11 @@
       }
       if (jokes.length) return getRandomJoke();
       if (quotes.length) return getRandomQuote();
-      return "Merry Christmas!";
+      return "Sun, Sand, and Trivia!";
     }
 
     function getRandomQuote() {
-      if (!quotes.length) return "Merry Christmas!";
+      if (!quotes.length) return "Sun, Sand, and Trivia!";
       if (usedIndicesQuotes.size === quotes.length) {
         usedIndicesQuotes.clear();
       }
@@ -814,7 +810,7 @@
     }
 
     function getRandomJoke() {
-      if (!jokes.length) return "Merry Christmas!";
+      if (!jokes.length) return "Sun, Sand, and Trivia!";
       if (usedIndicesJokes.size === jokes.length) {
         usedIndicesJokes.clear();
       }
@@ -881,42 +877,6 @@
       timerLength = value;
     }
 
-  </script>
-
-  <!-- Initialize Particles.js (Snow) -->
-  <script>
-    particlesJS('particles-js', {
-      particles: {
-        number: { 
-          value: 80, 
-          density: { enable: true, value_area: 800 } 
-        },
-        color: { value: '#ffffff' },
-        shape: { type: 'circle' },
-        opacity: { value: 0.8, anim: { enable: false } },
-        size: { value: 5, random: true, anim: { enable: false } },
-        line_linked: { enable: false },
-        move: {
-          enable: true,
-          speed: 2,
-          direction: 'bottom',
-          random: false,
-          straight: false,
-          out_mode: 'out',
-          bounce: false
-        }
-      },
-      interactivity: {
-        detect_on: 'canvas',
-        events: {
-          onhover: { enable: false },
-          onclick: { enable: false },
-          resize: true
-        },
-        modes: {}
-      },
-      retina_detect: true
-    });
   </script>
 </body>
 </html>
